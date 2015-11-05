@@ -30,7 +30,7 @@ for line in open(file_name).readlines():
 #print graphrev_nodes,graph_nodes
 global sccs,all_leader,leader,count
 all_leader = []
-sccs = {key: [] for key in graph_nodes.keys()}
+sccs = {key: [] for key in xrange(1+max([max(graph_nodes.keys()),max(graphrev_nodes.keys())]))}
 def ExpNode(nodes,g_nodes,lead):
   global count,sccs,all_leader,leader
   for node in nodes:
@@ -42,7 +42,10 @@ def ExpNode(nodes,g_nodes,lead):
         if(False in [i[3] for i in g_nodes[node[1]]]):
           ExpNode(g_nodes[node[1]],g_nodes,lead)
       else:
-        continue
+        print node[0],node[1]
+        if(not(lead>-1)):
+          count+=1
+          all_leader.append(node[1])
     else:
       continue
     leader[node[0]]+=1
@@ -53,7 +56,7 @@ def ExpNode(nodes,g_nodes,lead):
         all_leader.append(node[0])
       else:
         sccs[lead].append(node[0])
-      #print 'Aft',sccs,count,node    
+      print 'Aft',sccs,count,node    
 
 def FindLeaders(g_nodes):
   global leader,count
@@ -71,8 +74,12 @@ def FindSCC(g_nodes):
   leader = {key: 0 for key in g_nodes.keys()}
   all_leader.reverse()
   for head in all_leader:
+    print head
     lead=head
-    ExpNode(g_nodes[head],g_nodes,lead)
+    if(not(head in g_nodes.keys())):
+      sccs[head].append(head)
+    else:
+      ExpNode(g_nodes[head],g_nodes,lead)
     #print head
 
 FindSCC(graph_nodes)
