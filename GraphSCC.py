@@ -65,34 +65,45 @@ def RecExpNode(nodes,g_nodes,lead):
 
 def ExpNode(nodes,g_nodes,lead):
     global count,sccs,all_leader,leader
-    in_heads = [i[0] for i in nodes]
     in_tails = []
     cur_heads = [] 
     e_bool = True
-    cur_node = in_heads[0]
+    cur_node = nodes[-1][0]
     while(e_bool):
-      exp_node = g_nodes[cur_node][leader[cur_node]]
-      leader[cur_node]+=1
-      #TODO exp_node here can be multiple edges also
-      if(exp_node[3]==False):
-        exp_node[3]==True
-        count+=1
-        cur_heads.append(cur_node)
-        if(len(g_nodes[exp_node[1]])>0):
-          cur_node = exp_node[1]
-        else:
-          for i in xrange(len(cur_heads)):
-         #TODO won't work right now because g_nodes[i] might be multiple edges
-            if(g_nodes[i][2]>count):
-              g_nodes[i][2]=count
-            count-=1
-            e_bool = False
+      print cur_node,count,cur_heads,in_tails
+      if(len(g_nodes[cur_node])>leader[cur_node]):
+        exp_node = g_nodes[cur_node][leader[cur_node]]
+        print 'Explore',exp_node
+        leader[cur_node]+=1
+        if(exp_node[3]==False):
+          print 'Here'
+          exp_node[3]=True
+          if(leader[cur_node]==1):
+            cur_heads.append(cur_node)
+          if(len(g_nodes[exp_node[1]])>0):
+            cur_node = exp_node[1]
+          else:
+            count+=1
+            g_nodes[-1][2]=count
+            in_tails.append(exp_node[1])
+            cur_node = cur_heads[-1]
+        #else:
+        #  count+=1
+        #  g_nodes[cur_node][-1][2]=count
+        #  in_tails.append(cur_node)
+        #  cur_heads = cur_heads[:-1]
+        #  cur_node = cur_heads[-1]
       else:
-        for i in xrange(len(cur_heads)):
-          #TODO won't work right now because g_nodes[i] might be multiple edges
-          if(g_nodes[i][2]>count):
-            g_nodes[i][2]=count
-          count-=1
+        if(len(cur_heads)>1):
+          print 'Explore End',cur_node,exp_node
+          next_node = g_nodes[cur_node][leader[cur_node]-1][1]
+          #if(not(leader[next_node]<len(g_nodes[next_node]))):
+          count+=1
+          g_nodes[cur_node][-1][2]=count
+          in_tails.append(cur_heads[-1])
+          cur_heads = cur_heads[:-1]
+          cur_node = cur_heads[-1]
+        else:
           e_bool = False
 
 def FindLeaders(g_nodes):
@@ -100,8 +111,9 @@ def FindLeaders(g_nodes):
   count = 0
   leader = {key: 0 for key in g_nodes.keys()} 
   lead = -1 
-  for ind,nodes in g_nodes.iteritems():
-    ExpNode(nodes,g_nodes,lead)
+#  for ind,nodes in g_nodes.iteritems():
+  nodes = g_nodes[1] 
+  ExpNode(nodes,g_nodes,lead)
   
 FindLeaders(graphrev_nodes)
 print 'Found Leaders'
@@ -118,7 +130,8 @@ print 'Found Leaders'
 #    else:
 #      ExpNode(g_nodes[head],g_nodes,lead)
 
-FindSCC(graph_nodes)
+#FindSCC(graph_nodes)
+
 #print graphrev_nodes,graph_nodes
 
 #print 'SCCs:'
