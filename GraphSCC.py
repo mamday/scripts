@@ -86,8 +86,6 @@ def ExpNode(nodes,g_nodes,lead):
             cur_node = exp_node[1]
           else:
             #print 'Explore Edge'
-            count+=1
-            g_nodes[cur_node][-1][2]=count
             if(not(lead>-1)):
               leader[exp_node[1]]+=1
               h_node = deque()
@@ -103,8 +101,6 @@ def ExpNode(nodes,g_nodes,lead):
           if(cur_node!=nodes[-1][0]):
             if(len(g_nodes[cur_heads[-1]])==leader[cur_heads[-1]]):
               if(len(cur_heads)>1):
-                count+=1
-                g_nodes[cur_node][-1][2]=count
                 if(not(lead>-1)):
                   all_leader.append(cur_heads[-1])
                 else:
@@ -126,8 +122,6 @@ def ExpNode(nodes,g_nodes,lead):
           #next_node = g_nodes[cur_node][leader[cur_node]-1][1]
           #if(not(leader[next_node]<len(g_nodes[next_node]))):
           if(len(g_nodes[cur_heads[-1]])==leader[cur_heads[-1]]):
-            count+=1
-            g_nodes[cur_node][-1][2]=count
             if(not(lead>-1)):
               all_leader.append(cur_heads[-1])
             else:
@@ -151,13 +145,28 @@ def ExpNode(nodes,g_nodes,lead):
       #print e_bool,cur_node,cur_heads,all_leader
 
 def FindLeaders(g_nodes):
-  global leader,count
+  global all_leader,leader,count
+  leader = {key: 0 for key in g_nodes.keys()} 
+  count=0
+  count2=0
   for ind,nodes in g_nodes.iteritems():
+    count+=1
     if(len(nodes)==0 or not(False in [i[3] for i in nodes])):
+#    if(len(nodes)==0 or (nodes[0][1]==-1) or (leader[ind]==len(nodes))):
       continue
-    count = 0
+#    if(len(nodes)==1 and len(g_nodes[nodes[0][1]])==0):
+#      h_node = deque()
+#      h_node.append(nodes[0][1])
+#      h_node.append(-1)
+#      h_node.append(0)
+#      h_node.append(True)
+#      g_nodes[nodes[0][1]].append(h_node)
+#      all_leader.append(nodes[0][1])
+#      continue
+    count2+=1
+    #print count,count2
     lead = -1 
-    leader = {key: 0 for key in g_nodes.keys()} 
+    #leader = {key: 0 for key in g_nodes.keys()} 
     ExpNode(nodes,g_nodes,lead)
   
 FindLeaders(graphrev_nodes)
@@ -167,11 +176,11 @@ print 'Found Leaders'
 def FindSCC(g_nodes):
   global leader,count,all_leader
   all_leader.reverse()
+  leader = {key: 0 for key in g_nodes.keys()} 
   for head in all_leader:
     #print head
-    count = 0
     lead=head
-    leader = {key: 0 for key in g_nodes.keys()}
+    #leader = {key: 0 for key in g_nodes.keys()}
     if(not(False in [i[3] for i in g_nodes[head]])):
       if(not(len(g_nodes[head])>0)):
         sccs[head].append(head)
