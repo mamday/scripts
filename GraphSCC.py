@@ -5,12 +5,14 @@ import sys,os
 import math
 import copy
 from copy import deepcopy
+import collections
+from collections import deque
 file_name = sys.argv[1]
 global graph_nodes
 global graphrev_nodes
 #Make obnoxiously large dictionaries to avoid having to search through keys
-graph_nodes = {key: [] for key in [str(i) for i in xrange(0,1000000)]} 
-graphrev_nodes = {key: [] for key in [str(i) for i in xrange(0,1000000)]}
+graph_nodes = {key: deque() for key in [str(i) for i in xrange(0,1000000)]} 
+graphrev_nodes = {key: deque() for key in [str(i) for i in xrange(0,1000000)]}
  
 for line in open(file_name).readlines():
   in_list = line.split(' ')
@@ -18,23 +20,19 @@ for line in open(file_name).readlines():
   in_list = in_list[:2]
   sec_list = sec_list[:2]
 
-  num_list = in_list
+  num_list = in_list+[0]+[False]
   graph_nodes[num_list[0]].append(num_list)
-  graph_nodes[num_list[0]][-1].append(0)
-  graph_nodes[num_list[0]][-1].append(False)
 
   sec_list.reverse()
-  num_list1 = sec_list
+  num_list1 = sec_list+[0]+[False]
   graphrev_nodes[num_list1[0]].append(num_list1)
-  graphrev_nodes[num_list1[0]][-1].append(0)
-  graphrev_nodes[num_list1[0]][-1].append(False)
 
 print 'Loaded'
 #print graphrev_nodes,graph_nodes
 global sccs,all_leader,leader,count
-all_leader = []
+all_leader = deque() 
 #sccs = {key: [] for key in xrange(1+max([max(graph_nodes.keys()),max(graphrev_nodes.keys())]))}
-sccs = {key: [] for key in [str(i) for i in xrange(0,1000000)]} 
+sccs = {key: deque() for key in [str(i) for i in xrange(0,1000000)]} 
 #Today I learned that recursion is not always a good idea
 def RecExpNode(nodes,g_nodes,lead):
   global count,sccs,all_leader,leader
@@ -65,7 +63,7 @@ def RecExpNode(nodes,g_nodes,lead):
 
 def ExpNode(nodes,g_nodes,lead):
     global count,sccs,all_leader,leader
-    cur_heads = [] 
+    cur_heads = deque() 
     e_bool = True
     #if(len(nodes)<1):
     #  return 0 
@@ -91,6 +89,13 @@ def ExpNode(nodes,g_nodes,lead):
             count+=1
             g_nodes[cur_node][-1][2]=count
             if(not(lead>-1)):
+              leader[exp_node[1]]+=1
+              h_node = deque()
+              h_node.append(exp_node[1])
+              h_node.append(-1)
+              h_node.append(0)
+              h_node.append(False)
+              g_nodes[exp_node[1]].append(h_node)
               all_leader.append(exp_node[1])
             cur_node = cur_heads[-1]
         else:
@@ -116,6 +121,7 @@ def ExpNode(nodes,g_nodes,lead):
           else:
             e_bool = False
       else:
+        #print 'Explore Full'
         if(len(cur_heads)>1):
           #next_node = g_nodes[cur_node][leader[cur_node]-1][1]
           #if(not(leader[next_node]<len(g_nodes[next_node]))):
@@ -127,7 +133,7 @@ def ExpNode(nodes,g_nodes,lead):
             else:
               sccs[lead].append(cur_heads[-1])
               #print 'SCC',lead,sccs[lead]
-            cur_heads = cur_heads[:-1]
+            cur_heads.pop()
             cur_node = cur_heads[-1]
           else:
             cur_node = cur_heads[-1]
@@ -155,6 +161,7 @@ def FindLeaders(g_nodes):
     ExpNode(nodes,g_nodes,lead)
   
 FindLeaders(graphrev_nodes)
+
 print 'Found Leaders'
 
 def FindSCC(g_nodes):
