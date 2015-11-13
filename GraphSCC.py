@@ -94,7 +94,7 @@ def ExpNode(nodes,g_nodes,lead):
               h_node.append(exp_node[1])
               h_node.append(-1)
               h_node.append(0)
-              h_node.append(False)
+              h_node.append(True)
               g_nodes[exp_node[1]].append(h_node)
               all_leader.append(exp_node[1])
             cur_node = cur_heads[-1]
