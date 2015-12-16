@@ -9,11 +9,11 @@ n_dict = {key: None for key in xrange(1000)}
 for line in open(file_name).readlines():
   l_split = line.split('	')
   n_dict[int(l_split[0])] = [[int(k) for k in i.split(',')] for i in l_split if ',' in i]+[numpy.inf]+[0]
-
 for key,lis in n_dict.iteritems():
   if(not(lis)):
     n_dict[key]=[numpy.inf,0]
-
+  else:
+    print lis
 #Set initial node distance to zero
 n_dict[1][-2]=0
 
@@ -28,7 +28,7 @@ h_list = [[1,0]] + n_dict[1][:-2]
 n_dict[1]=n_dict[1][-2:]
 c_dist = n_dict[1][-2] 
 d_node = 1
-print h_list
+print 'List',h_list
 while(len(h_list)>0):
 #Update the distance for all the edges
   for edge in h_list: 
@@ -58,4 +58,4 @@ while(len(h_list)>0):
       l[1]+=c_dist
     h_list+=new_list
 
-print {key: lis[0] for key,lis in n_dict.iteritems() if lis[0]<numpy.inf}
+print 'End',{key: lis[0] for key,lis in n_dict.iteritems() if lis[0]<numpy.inf}
