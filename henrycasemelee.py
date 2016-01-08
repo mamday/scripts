@@ -82,9 +82,7 @@ w_ind=0
 boss_dead=False
 while(boss_dead!='Fail'):
   hc_dict = {'hp':start_hp,'dam':0,'arm':0}
-  #print 'WR',w_ind,r_ind,r_ind1,gear_dict['Weapons'][w_ind][0],gear_dict['Rings'][r_ind][0],gear_dict['Rings'][r_ind1][0],gear_dict['Weapons'][w_ind][0]+gear_dict['Rings'][r_ind][0]+gear_dict['Rings'][r_ind1][0]
   IncWeapon(w_ind)
-
   IncRing(r_ind)
   IncRing(r_ind1)
   FightBoss()
@@ -120,7 +118,7 @@ r_ind=0
 boss_dead=False
 #Try without armor and one ring (and save cheapest prices)
 while(boss_dead!='Fail'):
-  print 'RW1',w_ind,r_ind
+  #print 'RW1',w_ind,r_ind
   hc_dict = {'hp':start_hp,'dam':0,'arm':0}
   IncWeapon(w_ind)
   IncRing(r_ind)
@@ -174,9 +172,10 @@ while(boss_dead!='Fail'):
   hc_dict = {'hp':start_hp,'dam':0,'arm':0}
   IncWeapon(w_ind)
   IncArmor(a_ind)
+  IncRing(r_ind)
   FightBoss()
   if(boss_dead):
-    low_prices.append(gear_dict['Armor'][a_ind][0]+gear_dict['Weapons'][w_ind][0])
+    low_prices.append(gear_dict['Rings'][r_ind][0]+gear_dict['Armor'][a_ind][0]+gear_dict['Weapons'][w_ind][0])
     boss_dead=False
 #Update indexes
   if((w_ind+1)==len(gear_dict['Weapons'])):
@@ -194,4 +193,48 @@ while(boss_dead!='Fail'):
     w_ind+=1
   if(len(low_prices)>0):
     print 'All',len(low_prices),min(low_prices),boss_dead
+
+#Try with everything (with 2 rings) (and save cheapest price)
+w_ind=0
+a_ind=0
+r_ind=0
+r_ind1=1
+boss_dead=False
+while(boss_dead!='Fail'):
+  hc_dict = {'hp':start_hp,'dam':0,'arm':0}
+  #print 'All2',a_ind,w_ind,r_ind,r_ind1
+  IncWeapon(w_ind)
+  IncRing(r_ind)
+  IncRing(r_ind1)
+  FightBoss()
+  if(boss_dead):
+    low_prices.append(gear_dict['Armor'][a_ind][0]+gear_dict['Weapons'][w_ind][0]+gear_dict['Rings'][r_ind][0]+gear_dict['Rings'][r_ind1][0])
+    boss_dead=False
+#Update indexes
+  if(a_ind+1==len(gear_dict['Armor'])):
+    if(w_ind+1==len(gear_dict['Weapons'])):
+      if(r_ind+2==len(gear_dict['Rings'])):
+        boss_dead='Fail' 
+      elif(r_ind1+1<len(gear_dict['Rings'])):
+        r_ind1+=1
+      else:
+        r_ind+=1
+        r_ind1=r_ind+1
+    else:
+      if(r_ind+2==len(gear_dict['Rings'])):
+        w_ind+=1
+        a_ind=0
+        r_ind=0
+        r_ind1=1
+      elif(r_ind1+1<len(gear_dict['Rings'])):
+        r_ind1+=1
+        a_ind=0
+      else:
+        a_ind=0
+        r_ind+=1
+        r_ind1=r_ind+1
+  else:
+    a_ind+=1
+  if(len(low_prices)>0):
+    print 'All2',len(low_prices),min(low_prices),boss_dead
 
