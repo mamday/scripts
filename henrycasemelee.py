@@ -64,7 +64,7 @@ while(boss_dead!='Fail'):
   hc_dict = {'hp':start_hp,'dam':0,'arm':0}
   IncWeapon(w_ind)
   FightBoss()
-  if(boss_dead):
+  if(not(boss_dead)):
     low_prices.append(gear_dict['Weapons'][w_ind][0])
     boss_dead=False
 #Update indexes
@@ -73,7 +73,7 @@ while(boss_dead!='Fail'):
   else:
     w_ind+=1
   if(len(low_prices)>0):
-    print 'W',len(low_prices),min(low_prices),boss_dead
+    print 'W',len(low_prices),max(low_prices),boss_dead
 
 r_ind=0
 r_ind1=1
@@ -86,7 +86,7 @@ while(boss_dead!='Fail'):
   IncRing(r_ind)
   IncRing(r_ind1)
   FightBoss()
-  if(boss_dead):
+  if(not(boss_dead)):
     low_prices.append(gear_dict['Weapons'][w_ind][0]+gear_dict['Rings'][r_ind][0]+gear_dict['Rings'][r_ind1][0])
     boss_dead=False
 #Update indexes
@@ -111,7 +111,7 @@ while(boss_dead!='Fail'):
     r_ind+=1
     r_ind1=r_ind+1
   if(len(low_prices)>0):
-    print 'RW',len(low_prices),min(low_prices),boss_dead
+    print 'RW',len(low_prices),max(low_prices),boss_dead
 
 w_ind=0
 r_ind=0
@@ -123,7 +123,7 @@ while(boss_dead!='Fail'):
   IncWeapon(w_ind)
   IncRing(r_ind)
   FightBoss()
-  if(boss_dead):
+  if(not(boss_dead)):
     low_prices.append(gear_dict['Rings'][r_ind][0]+gear_dict['Weapons'][w_ind][0])
     boss_dead=False
 #Update indexes
@@ -136,7 +136,7 @@ while(boss_dead!='Fail'):
   else:
     w_ind+=1
   if(len(low_prices)>0):
-    print 'WR1',len(low_prices),min(low_prices),boss_dead
+    print 'WR1',len(low_prices),max(low_prices),boss_dead
 
 w_ind=0
 a_ind=0
@@ -147,7 +147,7 @@ while(boss_dead!='Fail'):
   IncWeapon(w_ind)
   IncArmor(a_ind)
   FightBoss()
-  if(boss_dead):
+  if(not(boss_dead)):
     low_prices.append(gear_dict['Armor'][a_ind][0]+gear_dict['Weapons'][w_ind][0])
     boss_dead=False
 #Update indexes
@@ -160,7 +160,7 @@ while(boss_dead!='Fail'):
   else:
     w_ind+=1
   if(len(low_prices)>0):
-    print 'WA',len(low_prices),min(low_prices),boss_dead
+    print 'WA',len(low_prices),max(low_prices),boss_dead
 
 w_ind=0
 a_ind=0
@@ -174,7 +174,7 @@ while(boss_dead!='Fail'):
   IncArmor(a_ind)
   IncRing(r_ind)
   FightBoss()
-  if(boss_dead):
+  if(not(boss_dead)):
     low_prices.append(gear_dict['Rings'][r_ind][0]+gear_dict['Armor'][a_ind][0]+gear_dict['Weapons'][w_ind][0])
     boss_dead=False
 #Update indexes
@@ -192,7 +192,7 @@ while(boss_dead!='Fail'):
   else:
     w_ind+=1
   if(len(low_prices)>0):
-    print 'All',len(low_prices),min(low_prices),boss_dead
+    print 'All',len(low_prices),max(low_prices),boss_dead
 
 #Try with everything (with 2 rings) (and save cheapest price)
 w_ind=0
@@ -204,10 +204,11 @@ while(boss_dead!='Fail'):
   hc_dict = {'hp':start_hp,'dam':0,'arm':0}
   #print 'All2',a_ind,w_ind,r_ind,r_ind1
   IncWeapon(w_ind)
+  IncWeapon(a_ind)
   IncRing(r_ind)
   IncRing(r_ind1)
   FightBoss()
-  if(boss_dead):
+  if(not(boss_dead)):
     low_prices.append(gear_dict['Armor'][a_ind][0]+gear_dict['Weapons'][w_ind][0]+gear_dict['Rings'][r_ind][0]+gear_dict['Rings'][r_ind1][0])
     boss_dead=False
 #Update indexes
@@ -236,5 +237,5 @@ while(boss_dead!='Fail'):
   else:
     a_ind+=1
   if(len(low_prices)>0):
-    print 'All2',len(low_prices),min(low_prices),boss_dead
+    print 'All2',len(low_prices),max(low_prices),boss_dead
 
