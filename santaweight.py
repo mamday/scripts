@@ -8,13 +8,17 @@ for line in open(in_file).readlines():
   w_list.append(int(line.strip()))
 
 g_weight = sum(w_list)/3
-
+print g_weight
 comb_list = []
+ind_list = []
+min_clen = numpy.inf
 #Find all combinations that add up to 1/3 of the total weight
 for i1,w in enumerate(w_list):
+  print i1,len(w_list)
+  ind_list.append(i1)
   cur_combs = []
   for i2,ow in enumerate(w_list):
-    if(i2!=i1):
+    if(not(i2 in ind_list)):
       new_combs = []
 #Add combinations to current sum(w_list)/3 sets
       for com in cur_combs:
@@ -28,16 +32,38 @@ for i1,w in enumerate(w_list):
   for c in cur_combs:
     #print i1,c,sum(c)
     if(sum(c)==g_weight):
-      comb_list.append(c)
+      if(len(c)<=min_clen):
+        min_clen=len(c)
+        comb_list.insert(0,c)
+      else:
+        comb_list.append(c)
 
-print comb_list,len(comb_list)
+s_list = [s for s in comb_list if len(s)==min_clen]
+print 'Min',min_clen,len(s_list),len(comb_list)
 trip_list = []
+tind_dict = {} 
 #Find all combinations of 1/3 weight objects that contain the full set of numbers 
 for i1,comb in enumerate(comb_list):
+  if(len(comb)>min_clen):
+    continue
   cur_trips = []
   trip_inds = []
+  comb.sort()
+  tind_dict[tuple(comb)]=1
+  #print tind_dict.keys(),comb,i1,len(comb_list)
+  print i1,comb,len(comb_list)
+  tind1_dict = {} 
+  foundBool=False
   for i2,comb1 in enumerate(comb_list):
-    if(i1!=i2):
+    if(foundBool):
+      continue
+    if((len(comb1)+len(comb))>len(w_list)):
+      continue
+    comb1.sort()
+    if(tuple(comb1) in tind1_dict.keys()):
+      continue
+    tind1_dict[tuple(comb1)]=1
+    if(not(tuple(comb1) in tind_dict.keys())):
       num_count=0
 #Add combinations to current triplets
       for i3,c in enumerate(cur_trips):
@@ -52,6 +78,9 @@ for i1,comb in enumerate(comb_list):
           #print i2,i3,trip_inds[i3]
           new_ti = trip_inds[i3]+[i2]
           trip_inds+=[new_ti]
+          if(len(cur_trips[-1])==len(w_list) and sum(cur_trips[-1])==sum(w_list)):
+            trip_list.append(trip_inds[-1])
+            foundBool=True
         #print 'Add',cur_trips,trip_inds,len(cur_trips),len(trip_inds)
 #Create new triplets
       for num in comb:
@@ -62,18 +91,22 @@ for i1,comb in enumerate(comb_list):
       else:
         cur_trips+=[comb+comb1]
         trip_inds.append([i1,i2])
+        if(len(cur_trips[-1])==len(w_list) and sum(cur_trips[-1])==sum(w_list)):
+          trip_list.append(trip_inds[-1])
+          foundBool=True
         #print 'New',cur_trips,trip_inds,len(cur_trips),len(trip_inds)
 #Check if list contains all members of w_list
-  for inds,ct in enumerate(cur_trips):
-    if(len(ct)==len(w_list) and sum(ct)==sum(w_list)):
+  #for inds,ct in enumerate(cur_trips):
+  #  if(len(ct)==len(w_list) and sum(ct)==sum(w_list)):
       #print ct,trip_inds[inds]
-      trip_list.append(trip_inds[inds])
-count = 0
+  #     trip_list.append(trip_inds[inds])
 
+count = 0
 #Determine the lowest quantum entanglement for the configurations with the fewest packages
 min_qe=numpy.inf
 min_len=numpy.inf
 for l in trip_list:
+  print count,len(trip_list)
   count+=1
   qe_val=numpy.inf
   for ind in l:
