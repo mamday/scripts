@@ -7,11 +7,13 @@ w_list = []
 for line in open(in_file).readlines():
   w_list.append(int(line.strip()))
 
-g_weight = sum(w_list)/3
+g_weight = sum(w_list)/4
 print g_weight
 comb_list = []
 ind_list = []
 min_clen = numpy.inf
+min_cqe = numpy.inf
+mcount=0
 #Find all combinations that add up to 1/3 of the total weight
 for i1,w in enumerate(w_list):
   print i1,len(w_list)
@@ -33,13 +35,23 @@ for i1,w in enumerate(w_list):
     #print i1,c,sum(c)
     if(sum(c)==g_weight):
       if(len(c)<=min_clen):
+        if(len(c)<min_clen):
+          mcount=0
+          min_cqe=numpy.inf
         min_clen=len(c)
-        comb_list.insert(0,c)
+        qe = reduce(lambda x, y: x*y, c)
+        if(qe<=min_cqe):
+          print len(c),c,qe,min_cqe
+          min_cqe=qe
+          comb_list.insert(0,c)
+          mcount+=1
+        else:
+          comb_list.insert(mcount,c)
       else:
         comb_list.append(c)
 
-s_list = [s for s in comb_list if len(s)==min_clen]
-print 'Min',min_clen,len(s_list),len(comb_list)
+s_list = [min(s) for s in comb_list if len(s)==min_clen]
+print 'Min',min_cqe,min_clen,len(s_list),len(comb_list)
 trip_list = []
 tind_dict = {} 
 #Find all combinations of 1/3 weight objects that contain the full set of numbers 
@@ -51,7 +63,8 @@ for i1,comb in enumerate(comb_list):
   comb.sort()
   tind_dict[tuple(comb)]=1
   #print tind_dict.keys(),comb,i1,len(comb_list)
-  print i1,comb,len(comb_list)
+  cqe = reduce(lambda x, y: x*y, comb)
+  print i1,comb,cqe,len(comb_list)
   tind1_dict = {} 
   foundBool=False
   for i2,comb1 in enumerate(comb_list):
@@ -81,6 +94,9 @@ for i1,comb in enumerate(comb_list):
           if(len(cur_trips[-1])==len(w_list) and sum(cur_trips[-1])==sum(w_list)):
             trip_list.append(trip_inds[-1])
             foundBool=True
+            for ins in trip_inds[-1]:
+              if(len(comb_list[ins])==min_clen):
+                tind_dict[tuple(comb_list[ins])]=1
         #print 'Add',cur_trips,trip_inds,len(cur_trips),len(trip_inds)
 #Create new triplets
       for num in comb:
@@ -94,6 +110,9 @@ for i1,comb in enumerate(comb_list):
         if(len(cur_trips[-1])==len(w_list) and sum(cur_trips[-1])==sum(w_list)):
           trip_list.append(trip_inds[-1])
           foundBool=True
+          for ins in trip_inds[-1]:
+            if(len(comb_list[ins])==min_clen):
+              tind_dict[tuple(comb_list[ins])]=1
         #print 'New',cur_trips,trip_inds,len(cur_trips),len(trip_inds)
 #Check if list contains all members of w_list
   #for inds,ct in enumerate(cur_trips):
