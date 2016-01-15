@@ -64,6 +64,7 @@ for i1,comb in enumerate(comb_list):
   tind_dict[tuple(comb)]=1
   #print tind_dict.keys(),comb,i1,len(comb_list)
   cqe = reduce(lambda x, y: x*y, comb)
+  #TODO: For both cases in my puzzle, the value of cqe here that was derived from the first entry in my list comb_list was the answer. Ideally if I wanted this program to work quickly and elegantly I would return cqe after testing that it meets the criterion of being one of three sets that use all the numbers but I am too lazy to do that so for now it is this hinky nonsense (but it runs quickly)
   print i1,comb,cqe,len(comb_list)
   tind1_dict = {} 
   foundBool=False
