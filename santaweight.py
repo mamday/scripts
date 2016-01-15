@@ -7,7 +7,7 @@ w_list = []
 for line in open(in_file).readlines():
   w_list.append(int(line.strip()))
 
-g_weight = sum(w_list)/4
+g_weight = sum(w_list)/3
 print g_weight
 comb_list = []
 ind_list = []
@@ -74,10 +74,10 @@ for i1,comb in enumerate(comb_list):
     if((len(comb1)+len(comb))>len(w_list)):
       continue
     comb1.sort()
-    if(tuple(comb1) in tind1_dict.keys()):
+    if(tuple(comb1) in tind1_dict):
       continue
     tind1_dict[tuple(comb1)]=1
-    if(not(tuple(comb1) in tind_dict.keys())):
+    if(not(tuple(comb1) in tind_dict)):
       num_count=0
 #Add combinations to current triplets
       for i3,c in enumerate(cur_trips):
