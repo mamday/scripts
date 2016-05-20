@@ -54,7 +54,7 @@ class MyList(object):
       node = node.getNext()
     return count
   def getInd(self,val):
-#Get the index of the node with value val
+#Get the index of the first node with value val
     node = self.cur_node
     if(node==None):
       return "List is empty"
@@ -87,6 +87,7 @@ class MyList(object):
             prev_node.setNext(node.getNext())
           else:
             self.cur_node=node.getNext() 
+          break
       prev_node=node
       node = node.getNext()
     if(not(del_bool)):
@@ -109,6 +110,7 @@ class MyList(object):
             prev_node.setNext(node.getNext())
           else:
             self.cur_node=node.getNext() 
+          break
       prev_node=node
       node = node.getNext()
   def insertValue(self,val,ind):
@@ -121,7 +123,6 @@ class MyList(object):
 #Insert value val and index ind, and increase indices of previous nodes
     while node != None:
       if(not(ins_bool)):
-        print node.cur_val,node.ind
         node.ind+=1
         if(node.getCurInd()==ind):
           ins_bool = True 
@@ -133,7 +134,8 @@ class MyList(object):
             new_node.setNext(self.cur_node)
             self.cur_node=new_node
             self.cur_ind+=1
-      if(ind==0 and node.getCurInd()==1):
+          break
+        if(ind==0 and node.getCurInd()==1):
           node.setNext(new_node)
           new_node.setNext(None)
           break
