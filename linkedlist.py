@@ -1,21 +1,18 @@
+import basicnode
+from basicnode import Node 
+
 #My list node implementation
-class Node(object):
+class LLNode(Node):
   def __init__(self,val,ind):
-    self.cur_val = val
+    Node.__init__(self,val)
     self.ind = ind 
     self.next = None 
   def getCurInd(self):
     return self.ind 
-  def getCurVal(self):
-    return self.cur_val 
   def getNext(self):
     return self.next
   def setNext(self,newnext):
     self.next=newnext
-  def setCurVal(self,val):
-    self.cur_val=val
-  def __str__(self):
-    return str(self.cur_val)
 
 #My linked list implementation
 class MyList(object):
@@ -39,9 +36,9 @@ class MyList(object):
       node = node.getNext()
     full_lis+= " M]"
     return full_lis
-  def addNode(self,val):
+  def addVal(self,val):
 #Add a node to the list with value val at the currently available index position
-    new_node = Node(val,self.cur_ind)
+    new_node = LLNode(val,self.cur_ind)
     new_node.setNext(self.cur_node)  
     self.cur_node = new_node
     self.cur_ind+=1
@@ -63,7 +60,7 @@ class MyList(object):
         return node.getCurInd()
       node = node.getNext()
     return "Did not find entry"
-  def getNode(self,ind):
+  def getVal(self,ind):
 #Get the value of the node at index ind
     node = self.cur_node
     while node != None:
@@ -71,7 +68,7 @@ class MyList(object):
         return node.getCurVal()
       node = node.getNext()
     return "Index is out of range"
-  def delNode(self,val):
+  def delVal(self,val):
     node = self.cur_node
     prev_node = None
     del_bool = False
@@ -100,7 +97,7 @@ class MyList(object):
       return "List is empty"
     elif(ind<0 or ind>(self.getSize()-1)):
       return "Index is out of range"
-#Delete Node at index ind after decreasing the index of the previous nodes
+#Delete Val at index ind after decreasing the index of the previous nodes
     while node != None:
       if(not(del_bool)):
         node.ind-=1
@@ -115,7 +112,7 @@ class MyList(object):
       node = node.getNext()
   def insertValue(self,val,ind):
     node = self.cur_node
-    new_node = Node(val,ind)
+    new_node = LLNode(val,ind)
     prev_node = None
     ins_bool = False
     if(ind<0 or ind>(self.getSize())):
