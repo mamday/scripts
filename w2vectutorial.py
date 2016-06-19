@@ -1,13 +1,16 @@
 import pandas as pd
 import nltk
 from nltk import *
+import sys
 
 # Read data from files 
-train = pd.read_csv( "data/labeledTrainData.tsv", header=0, 
- delimiter="\t", quoting=3 )
-test = pd.read_csv( "data/testData.tsv", header=0, delimiter="\t", quoting=3 )
-unlabeled_train = pd.read_csv( "data/unlabeledTrainData.tsv", header=0, 
- delimiter="\t", quoting=3 )
+#train = pd.read_csv( "data/labeledTrainData.tsv", header=0, 
+# delimiter="\t", quoting=3 )
+#test = pd.read_csv( "data/testData.tsv", header=0, delimiter="\t", quoting=3 )
+#unlabeled_train = pd.read_csv( "data/unlabeledTrainData.tsv", header=0, 
+# delimiter="\t", quoting=3 )
+
+in_data = pd.read_csv(sys.argv[1], header=0, delimiter=",", quotechar='"',skipinitialspace=True)
 
 # Import various modules for string cleaning
 from bs4 import BeautifulSoup
@@ -66,12 +69,7 @@ def review_to_sentences( review, tokenizer, remove_stopwords=False ):
 
 sentences = []  # Initialize an empty list of sentences
 
-print "Parsing sentences from training set"
-for review in train["review"]:
-    sentences += review_to_sentences(review, tokenizer)
-
-print "Parsing sentences from unlabeled set"
-for review in unlabeled_train["review"]:
+for review in in_data["comment_text"]:
     sentences += review_to_sentences(review, tokenizer)
 
 import gensim
@@ -79,9 +77,9 @@ from gensim import corpora, models, similarities
 from gensim.models import word2vec
 
 dictionary = corpora.Dictionary(sentences)
-dictionary.save('IMDBdict.dict')
+dictionary.save('HNdict.dict')
 corpus = [dictionary.doc2bow(sentence) for sentence in sentences]
-corpora.MmCorpus.serialize('IMDBcorpus.mm', corpus)
+corpora.MmCorpus.serialize('HNcorpus.mm', corpus)
 
 # Import the built-in logging module and configure it so that Word2Vec 
 # creates nice output messages
@@ -110,7 +108,7 @@ def Word2Vec(sentences):
 
 # It can be helpful to create a meaningful model name and 
 # save the model for later use. You can load it later using Word2Vec.load()
-  model_name = "300features_40minwords_10context"
+  model_name = "HN_300features_40minwords_10context"
   model.save(model_name)
 
   #model.doesnt_match("france england germany berlin".split())
@@ -119,3 +117,4 @@ def Word2Vec(sentences):
   #model.most_similar("queen")
   #model.most_similar("king")
 
+Word2Vec(sentences)
