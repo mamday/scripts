@@ -10,6 +10,9 @@ import sys
 #unlabeled_train = pd.read_csv( "data/unlabeledTrainData.tsv", header=0, 
 # delimiter="\t", quoting=3 )
 
+in_str='HN'
+text_str="comment_text"
+
 in_data = pd.read_csv(sys.argv[1], header=0, delimiter=",", quotechar='"',skipinitialspace=True)
 
 # Import various modules for string cleaning
@@ -69,7 +72,8 @@ def review_to_sentences( review, tokenizer, remove_stopwords=False ):
 
 sentences = []  # Initialize an empty list of sentences
 
-for review in in_data["comment_text"]:
+#for review in in_data["comment_text"]:
+for review in in_data[text_str]:
     sentences += review_to_sentences(review, tokenizer)
 
 import gensim
@@ -77,9 +81,9 @@ from gensim import corpora, models, similarities
 from gensim.models import word2vec
 
 dictionary = corpora.Dictionary(sentences)
-dictionary.save('HNdict.dict')
+dictionary.save(in_str+'dict.dict')
 corpus = [dictionary.doc2bow(sentence) for sentence in sentences]
-corpora.MmCorpus.serialize('HNcorpus.mm', corpus)
+corpora.MmCorpus.serialize(in_str+'corpus.mm', corpus)
 
 # Import the built-in logging module and configure it so that Word2Vec 
 # creates nice output messages
@@ -108,7 +112,7 @@ def Word2Vec(sentences):
 
 # It can be helpful to create a meaningful model name and 
 # save the model for later use. You can load it later using Word2Vec.load()
-  model_name = "HN_300features_40minwords_10context"
+  model_name = in_str+"_300features_40minwords_10context"
   model.save(model_name)
 
   #model.doesnt_match("france england germany berlin".split())
