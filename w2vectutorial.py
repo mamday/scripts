@@ -10,8 +10,8 @@ import sys
 #unlabeled_train = pd.read_csv( "data/unlabeledTrainData.tsv", header=0, 
 # delimiter="\t", quoting=3 )
 
-in_str='HN'
-text_str="comment_text"
+in_str='Meetup-Fix'
+text_str="evt_name"
 
 in_data = pd.read_csv(sys.argv[1], header=0, delimiter=",", quotechar='"',skipinitialspace=True)
 
@@ -73,15 +73,32 @@ def review_to_sentences( review, tokenizer, remove_stopwords=False ):
 sentences = []  # Initialize an empty list of sentences
 
 #for review in in_data["comment_text"]:
-for review in in_data[text_str]:
-    sentences += review_to_sentences(review, tokenizer)
+counter = 0
+for ind,review in enumerate(in_data[text_str]):
+    f_list = []
+    b_len = len(f_list)
+    the_text = review_to_sentences(review, tokenizer)
+    f_list+=the_text
+    a_len = len(f_list)
+    len_diff = a_len-b_len
+    if(len_diff>1):
+      new_text = []
+      for tt in the_text:
+        new_text+=tt 
+      the_text=[new_text]
+      #print the_text,len_diff,in_data['evt_id'][ind],counter
+    sentences += the_text 
+
+    counter+=1
+#print 'Lala',len(sentences)
 
 import gensim
 from gensim import corpora, models, similarities
 from gensim.models import word2vec
-
 dictionary = corpora.Dictionary(sentences)
 dictionary.save(in_str+'dict.dict')
+corpus = []
+recount = 0
 corpus = [dictionary.doc2bow(sentence) for sentence in sentences]
 corpora.MmCorpus.serialize(in_str+'corpus.mm', corpus)
 
@@ -121,4 +138,6 @@ def Word2Vec(sentences):
   #model.most_similar("queen")
   #model.most_similar("king")
 
-Word2Vec(sentences)
+#Word2Vec(sentences)
+
+
