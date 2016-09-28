@@ -11,7 +11,7 @@ def answer(food, grid):
   while(len(node_list)>0 and min_food>0):
     cur_food = food_list.pop()
     cur_node = node_list.pop()
-    print cur_food,cur_node,min_food,node_list,food_list
+    #print cur_food,cur_node,min_food,node_list,food_list
 #Get the current food value and subtract it from cur_food
     cur_val = grid[cur_node[0]][cur_node[1]]
     cur_food-=cur_val
@@ -65,7 +65,6 @@ def ganswer(food, grid):
 
     # your code here
 
-    min_food = 99
 
     food_list = [food]
 
@@ -79,32 +78,18 @@ def ganswer(food, grid):
     num_nodes = num_rows*num_cols
 
     res_dict = {} 
-
     '''Iterate through all the nodes until either we have traversed 
 
     the entire grid/tree or the maximum food value is used (result is 0)'''
 
-    while(len(node_list)>0 and min_food>0):
-        print 'Beg',food_list,node_list,past_nodes,past_food
+    while(len(node_list)>0):
+        #print 'Beg',food_list,node_list,past_nodes,past_food
         cur_food = food_list.pop()
 
         cur_node = node_list.pop()
         cur_val = grid[cur_node[0]][cur_node[1]]
-        print 'Beg',res_dict,cur_food
-        #if(cur_node in res_dict):
-        #  h_food = past_food.pop()
-        #  h_node = past_nodes.pop()
-        #  for f_val in res_dict[cur_node]:
-        #      if(not(h_node in res_dict)):
-        #        res_dict[h_node]=set([f_val+grid[h_node[0]][h_node[1]]])
-        #      else:
-        #        res_dict[h_node].add(f_val+grid[h_node[0]][h_node[1]])
-        #      if((cur_food-f_val)>=0 and (cur_food-f_val)<min_food):
-        #        min_food = (cur_food-f_val)
-        #  continue
+        #print 'Beg',res_dict,cur_node,cur_food
 
-        #Get the current food value and subtract it from cur_food
-        cur_food-=cur_val
         #Determine the indices of the down and rightward nodes
 
         down_ind = cur_node[0]+1
@@ -124,7 +109,7 @@ def ganswer(food, grid):
         if(down_ind<num_cols):
 
             down_node = (down_ind,cur_node[1])
-        print 'Mid',right_node,down_node,cur_food
+        #print 'Mid',right_node,down_node,cur_food
         '''If there is no down and no right node we are at the end.
 
         Save the minimum amount of food if it is lower than the
@@ -147,22 +132,21 @@ def ganswer(food, grid):
                 else:
                   res_dict[h_node].add(f_val+h_food)
               prev_node = h_node
+              #print res_dict[h_node],cur_food,h_food,f_val,h_node,cur_val
               '''Stop iterating through nodes when we hit a fork.'''
               if(len(past_nodes)>0 and h_node==past_nodes[-1]):
                 r_node=True 
-
-              print res_dict[h_node],h_food,h_node,cur_val
-            if(cur_food>=0 and cur_food<min_food):
-
-                min_food=cur_food
-
+            '''Once the while loop is finished then continue to next node'''
             continue
+
 
         #Get the right and down food values if they exist
 
         right_val = -1
 
         down_val = -1
+        #Get the current food value and subtract it from cur_food
+        cur_food-=cur_val
 
         if(right_node!=None):
 
@@ -203,16 +187,213 @@ def ganswer(food, grid):
             food_list.append(cur_food)
             past_nodes.append(cur_node)
             past_food.append(cur_val)
+    #print 'Fin',res_dict
 
+    min_food=99
+    for i in res_dict[(0,0)]:
+      if((food-i)>=0 and (food-i)<min_food):
+        min_food=(food-i)
     if(min_food==99):
-
-        min_food=-1
-
+      min_food=-1
     return min_food
 
-
-ta = ganswer(12,[[0, 2, 5], [1, 1, 3], [2, 1, 1]])
+#ta = ganswer(3,[[0, 2, 5], [1, 1, 3], [2, 1, 1]])
 #ta = ganswer(7,[[0, 2, 5], [1, 1, 3], [2, 1, 1],[4,4,1]])
-#ta = ganswer(7,[[0, 2, 5,1], [1, 1, 3,1], [2, 1, 1,1]])
+#ta = ganswer(77,[[0, 2, 5,1], [1, 1, 3,1], [2, 1, 1,1]])
+ta = answer(197,[[0, 2, 5,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[1, 1, 3,1], 
+[2, 1, 1,1]])
 
 print ta
