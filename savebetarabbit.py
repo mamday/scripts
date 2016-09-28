@@ -60,7 +60,7 @@ def answer(food, grid):
 that is most food expensive to try to greedily optimize the time it takes
 
 to get the correct answer.''' 
-
+import copy
 def ganswer(food, grid):
 
     # your code here
@@ -91,20 +91,19 @@ def ganswer(food, grid):
         cur_node = node_list.pop()
         cur_val = grid[cur_node[0]][cur_node[1]]
         print 'Beg',res_dict,cur_food
-        if(cur_node in res_dict):
-          h_food = past_food.pop()
-          h_node = past_nodes.pop()
-          for f_val in res_dict[cur_node]:
-              if(not(h_node in res_dict)):
-                res_dict[h_node]=set([f_val+grid[h_node[0]][h_node[1]]])
-              else:
-                res_dict[h_node].add(f_val+grid[h_node[0]][h_node[1]])
-              if((cur_food-f_val)>=0 and (cur_food-f_val)<min_food):
-                min_food = (cur_food-f_val)
-          continue
+        #if(cur_node in res_dict):
+        #  h_food = past_food.pop()
+        #  h_node = past_nodes.pop()
+        #  for f_val in res_dict[cur_node]:
+        #      if(not(h_node in res_dict)):
+        #        res_dict[h_node]=set([f_val+grid[h_node[0]][h_node[1]]])
+        #      else:
+        #        res_dict[h_node].add(f_val+grid[h_node[0]][h_node[1]])
+        #      if((cur_food-f_val)>=0 and (cur_food-f_val)<min_food):
+        #        min_food = (cur_food-f_val)
+        #  continue
+
         #Get the current food value and subtract it from cur_food
-
-
         cur_food-=cur_val
         #Determine the indices of the down and rightward nodes
 
@@ -132,24 +131,27 @@ def ganswer(food, grid):
 
         previous minimum (as long as it is a positive amount of food).'''
 
-        if(right_node==None and down_node==None):
+        if((right_node==None and down_node==None) or (cur_node in res_dict)):
             r_node=False
             '''Keep track of how much food was used between a node and the end.
             Save the results as a set in a dictionary indexed by node.'''
-            food_count = cur_val 
+            prev_node = cur_node
+            if(not(cur_node in res_dict)):
+              res_dict[cur_node]=set([cur_val])
             while(r_node==False and len(past_food)>0):
               h_node = past_nodes.pop()
               h_food = past_food.pop()
-              food_count+=h_food
-              if(not(h_node in res_dict)):
-                res_dict[h_node]=set([food_count])
-              else:
-                res_dict[h_node].add(food_count)
+              for f_val in res_dict[prev_node]:
+                if(not(h_node in res_dict)):
+                  res_dict[h_node]=set([f_val+h_food])
+                else:
+                  res_dict[h_node].add(f_val+h_food)
+              prev_node = h_node
               '''Stop iterating through nodes when we hit a fork.'''
               if(len(past_nodes)>0 and h_node==past_nodes[-1]):
                 r_node=True 
 
-              print res_dict[h_node],h_food,h_node,food_count
+              print res_dict[h_node],h_food,h_node,cur_val
             if(cur_food>=0 and cur_food<min_food):
 
                 min_food=cur_food
@@ -209,8 +211,8 @@ def ganswer(food, grid):
     return min_food
 
 
-#ta = ganswer(7,[[0, 2, 5], [1, 1, 3], [2, 1, 1]])
-ta = answer(7,[[0, 2, 5], [1, 1, 3], [2, 1, 1],[4,4,1]])
-#ta = answer(7,[[0, 2, 5,1], [1, 1, 3,1], [2, 1, 1,1]])
+ta = ganswer(12,[[0, 2, 5], [1, 1, 3], [2, 1, 1]])
+#ta = ganswer(7,[[0, 2, 5], [1, 1, 3], [2, 1, 1],[4,4,1]])
+#ta = ganswer(7,[[0, 2, 5,1], [1, 1, 3,1], [2, 1, 1,1]])
 
 print ta
