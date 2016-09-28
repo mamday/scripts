@@ -3,15 +3,15 @@ def answer(food, grid):
   min_food = 99 
   food_list = [food]
   node_list = [(0,0)]
-  num_rows = len(grid)
-  num_cols = len(grid[0])
+  num_cols = len(grid)
+  num_rows = len(grid[0])
   num_nodes = num_rows*num_cols 
   res_dict = {}
 #Iterate through all the nodes until either we have traversed the entire grid/tree or the maximum food value is used (result is 0)
   while(len(node_list)>0 and min_food>0):
-    print node_list,food_list
     cur_food = food_list.pop()
     cur_node = node_list.pop()
+    print cur_food,cur_node,min_food,node_list,food_list
 #Get the current food value and subtract it from cur_food
     cur_val = grid[cur_node[0]][cur_node[1]]
     cur_food-=cur_val
@@ -72,9 +72,9 @@ def ganswer(food, grid):
     node_list = [(0,0)]
     past_nodes = []
     past_food = []
-    num_rows = len(grid)
+    num_cols = len(grid)
 
-    num_cols = len(grid[0])
+    num_rows = len(grid[0])
 
     num_nodes = num_rows*num_cols
 
@@ -99,7 +99,7 @@ def ganswer(food, grid):
                 res_dict[h_node]=set([f_val+grid[h_node[0]][h_node[1]]])
               else:
                 res_dict[h_node].add(f_val+grid[h_node[0]][h_node[1]])
-              if((cur_food-f_val)<min_food):
+              if((cur_food-f_val)>=0 and (cur_food-f_val)<min_food):
                 min_food = (cur_food-f_val)
           continue
         #Get the current food value and subtract it from cur_food
@@ -209,6 +209,8 @@ def ganswer(food, grid):
     return min_food
 
 
-ta = ganswer(12,[[0, 2, 5], [1, 1, 3], [2, 1, 1]])
+#ta = ganswer(7,[[0, 2, 5], [1, 1, 3], [2, 1, 1]])
+ta = answer(7,[[0, 2, 5], [1, 1, 3], [2, 1, 1],[4,4,1]])
+#ta = answer(7,[[0, 2, 5,1], [1, 1, 3,1], [2, 1, 1,1]])
 
 print ta
