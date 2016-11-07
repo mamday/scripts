@@ -1,6 +1,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <algorithm>
 #include "get_rand_stats.h"
 
 int_rnd_list::int_rnd_list(int N):fizz_rnd_list(N){
@@ -18,6 +19,7 @@ fizz_rnd_list::fizz_rnd_list(float N){
   for(int i=0; i<int_N; ++i){
     random_list__[i]=((float)rand()/(float)(RAND_MAX));
   }
+  std::sort(&random_list__[0],&random_list__[int_N]);
   for(int i=0; i<int_N; ++i){
     std::cout<<random_list__[i]<<std::endl;
   }
@@ -29,6 +31,7 @@ fizz_rnd_list::fizz_rnd_list(int N){
   for(int i=0; i<N; ++i){
     random_list__[i]=rand() % 1000;
   }
+  std::sort(&random_list__[0],&random_list__[N]);
   for(int i=0; i<N; ++i){
     std::cout<<random_list__[i]<<std::endl;
   }
