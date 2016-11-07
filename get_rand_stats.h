@@ -12,6 +12,7 @@ class fizz_rnd_list{
     std::tuple<int, int, double, double> get_stats(int X);
   private:
     double* random_list__;
+    int cur_N;
 };
 
 class int_rnd_list: public fizz_rnd_list{
