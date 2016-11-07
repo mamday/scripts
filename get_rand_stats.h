@@ -9,7 +9,6 @@ class fizz_rnd_list{
     fizz_rnd_list(float N);
     virtual ~fizz_rnd_list();
     std::tuple<double, int, double, double> get_stats(double X);
-    std::tuple<int, int, double, double> get_stats(int X);
   private:
     double* random_list__;
     int cur_N;

@@ -46,19 +46,8 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
     std::cerr<<"ERROR: Random array has no entries"<<std::endl;
     exit(EXIT_FAILURE);
   } 
-  double *firstHalf = &random_list__[0];
-  double *secondHalf = &random_list__[cur_N/2];
-  std::cout<<firstHalf[0]<<" "<<secondHalf[0]<<std::endl;
-  std::cout<<firstHalf[1]<<" "<<secondHalf[1]<<std::endl;
-}
-
-std::tuple<int, int, double, double> fizz_rnd_list::get_stats(int X){
-  if(cur_N==0){
-    std::cerr<<"ERROR: Random array has no entries"<<std::endl;
-    exit(EXIT_FAILURE);
-  } 
   int cur_index = -1;
-  int close_val = -1;
+  double close_val = -1;
   int cur_len = cur_N; 
   double* cur_list = random_list__;
   while(cur_len>1){
@@ -94,7 +83,7 @@ int main(){
   int i_num = 10;
   fizz_rnd_list f_rnd(num);
   int_rnd_list i_rnd(num);
-
+  f_rnd.get_stats(0.4); 
   i_rnd.get_stats(500);
 }
 
