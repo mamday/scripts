@@ -1,5 +1,8 @@
 import numpy,sys,random
-'''Class that creates a list of random numbers between 0-1, then uses its get_stats method to find the index of the value in the list that is closest to the inut. Once the index is found, it calculates the std dev and mean of the list up to that index'''
+'''Class that creates a list of random numbers between 0-1, then uses its 
+get_stats method to find the index of the value in the list that is closest
+to the inut. Once the index is found, it calculates the std dev and mean
+of the list up to that index'''
 class fizz_rnd_list(object):
   def __init__(self,N):
     '''Create the list once. To reduce the complexity of get_stats() from O(n)
@@ -16,9 +19,9 @@ class fizz_rnd_list(object):
     out_str+=']'
     return out_str 
   def get_stats(self,X):
-  '''Use a binary tree to find the input value in the sorted list. 
-     By keeping only the half of the list that contains the number closest 
-     to X, only log(n) calls are necessary'''
+    '''Use a binary tree to find the input value in the sorted list. 
+    By keeping only the half of the list that contains the number closest 
+    to X, only log(n) calls are necessary'''
     cur_index = -1
     close_val = -1
     if(len(self.rand_list)==0):
@@ -50,15 +53,19 @@ class fizz_rnd_list(object):
     ind_mean = numpy.mean(new_list)
     return close_val,cur_index,ind_mean,ind_std           
 
-'''Implement the initial not particularly efficient algorithm for calculating
- all the parameters. Plan to make a dynamic programming algorithm to make the
- std dev and mean calculations more efficient later '''
+'''Implement the efficient algorithm for calculating the value and index of
+the entry in the n_iters long list of random numbers that is closest to 
+cur_stat. Method for calculating mean and standard deviation is currently 
+not very efficent. Plan to make a dynamic programming algorithm to make the
+std dev and mean calculations more efficient later '''
 def main():
   n_iters = int(sys.argv[1])
   my_rand_list = fizz_rnd_list(n_iters)
   for it in xrange(0,n_iters): 
     cur_stat = random.random()
     val,ind,mean,std_dev = my_rand_list.get_stats(cur_stat) 
+    #A simple way to output the result, if you want
+    print cur_stat,val,ind,mean,std_dev
 
 if __name__=="__main__":
   main()
