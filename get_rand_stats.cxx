@@ -21,7 +21,6 @@ int_rnd_list::~int_rnd_list(){
 fizz_rnd_list::fizz_rnd_list(float N): cur_N(static_cast<int>(N)),x_mean(0){
   int int_N = static_cast<int>(N);
   random_list__ = new double[int_N]();
-  srand((unsigned int) time(NULL));
   for(int i=0; i<int_N; ++i){
     random_list__[i]=((float)rand()/(float)(RAND_MAX));
   }
@@ -29,15 +28,14 @@ fizz_rnd_list::fizz_rnd_list(float N): cur_N(static_cast<int>(N)),x_mean(0){
   // can be O(log(n)) instead of O(n)
   std::sort(&random_list__[0],&random_list__[int_N]);
   //TODO: Delete this
-  for(int i=0; i<int_N; ++i){
-    std::cout<<random_list__[i]<<std::endl;
-  }
+  //for(int i=0; i<int_N; ++i){
+  //  std::cout<<random_list__[i]<<std::endl;
+  //}
 }
 
 //Initialize fizz_rnd_list if the input array length, N, is an int
 fizz_rnd_list::fizz_rnd_list(int N): cur_N(N), x_mean(0){
   random_list__ = new double[N]();
-  srand((unsigned int) time(NULL));
   for(int i=0; i<N; ++i){
     random_list__[i]=rand() % 1000;
   }
@@ -45,9 +43,9 @@ fizz_rnd_list::fizz_rnd_list(int N): cur_N(N), x_mean(0){
   // can be O(log(n)) instead of O(n)
   std::sort(&random_list__[0],&random_list__[N]);
   //TODO: Delete this
-  for(int i=0; i<N; ++i){
-    std::cout<<random_list__[i]<<std::endl;
-  }
+  //for(int i=0; i<N; ++i){
+  //  std::cout<<random_list__[i]<<std::endl;
+  //}
 }
 
 //Destruct fizz_rnd_list, making sure to abolish the dynamically allocated array
@@ -107,7 +105,7 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
       else{
         cur_index = cur_index + (cur_len/2);
       }
-      cur_len = (cur_len/2);
+      cur_len = ceil((float)cur_len/2.0);
       cur_list = secondHalf;
     }
     if(cur_len==1){
@@ -131,6 +129,8 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
 // the values up to the index 4)The standard deviation of all the values up to
 // the index 
 int main(int argc, char* argv[]){
+  //Initialize random number generator
+  srand(time(NULL));
   //Exit if the wrong number of inputs are given
   if(argc != 3){
     std::cerr<<"ERROR: Received the incorrect number of arguments"<<std::endl;
@@ -145,22 +145,28 @@ int main(int argc, char* argv[]){
   std::tuple<double,int,double,double> fin_tup;
   double rand_num;
   if(in_string=="thousand"){
-    int_rnd_list i_rnd(num);
-    rand_num = rand() % 1000;
-    fin_tup = i_rnd.get_stats(rand_num);
+    for(int i=0; i<(num+1); ++i){
+      int_rnd_list i_rnd(num);
+      rand_num = rand() % 1000;
+      fin_tup = i_rnd.get_stats(rand_num);
+      //The following will print the tuple if you want. Could make this a function
+      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+    }
   }
   else if(in_string=="one"){
-    fizz_rnd_list f_rnd(num);
-    rand_num = (float)rand()/(float)(RAND_MAX);
-    fin_tup = f_rnd.get_stats(rand_num); 
+    for(int i=0; i<(num+1); ++i){
+      fizz_rnd_list f_rnd(num);
+      rand_num = (float)rand()/(float)(RAND_MAX);
+      fin_tup = f_rnd.get_stats(rand_num); 
+      //The following will print the tuple if you want. Could make this a function
+      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+    }
   }
   else{
     //Fail if the input is not 'one' or 'thousand'
     std::cerr<<"ERROR: Invalid algorithm classifier"<<std::endl;
     exit(EXIT_FAILURE);
   }
-  //The following will print the tuple if you want. Could make this a function
-  std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
 
 }
 
