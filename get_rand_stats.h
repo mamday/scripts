@@ -32,5 +32,8 @@ class int_rnd_list: public fizz_rnd_list{
     int_rnd_list(int N);
     //Destructor
     ~int_rnd_list();
-
+    // I don't choose to reimplement any of the functionality from the original
+    // class, because this class can use it just as easily. I would probably
+    // not create this second class at all, if I was being most efficient,
+    // to save on having to call the virtual destructor
 };
