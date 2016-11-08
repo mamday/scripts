@@ -1,7 +1,7 @@
 import numpy,sys,random
 '''Class that creates a list of random numbers between 0-1, then uses its 
 get_stats method to find the index of the value in the list that is closest
-to the inut. Once the index is found, it calculates the std dev and mean
+to the input. Once the index is found, it calculates the std dev and mean
 of the list up to that index'''
 class fizz_rnd_list(object):
   def __init__(self,N):
@@ -24,6 +24,7 @@ class fizz_rnd_list(object):
     to X, only log(n) calls are necessary'''
     cur_index = -1
     close_val = -1
+    '''Raise an exception if the list is empty'''
     if(len(self.rand_list)==0):
       raise Exception('Random list contains no values')
     r_nums = self.rand_list
