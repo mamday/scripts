@@ -21,9 +21,9 @@ class fizz_rnd_list{
     //Array to hold the list of random numbers
     double* random_list__;
     //Length of the array of random numbers
-    int cur_N;
+    int cur_N__;
     //Mean from get_mean()
-    double x_mean;
+    double x_mean__;
 };
 
 class int_rnd_list: public fizz_rnd_list{

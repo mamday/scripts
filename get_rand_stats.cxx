@@ -18,7 +18,7 @@ int_rnd_list::~int_rnd_list(){
 }
 
 //Initialize fizz_rnd_list if the input array length, N, is a float
-fizz_rnd_list::fizz_rnd_list(float N): cur_N(static_cast<int>(N)),x_mean(0){
+fizz_rnd_list::fizz_rnd_list(float N): cur_N__(static_cast<int>(N)),x_mean__(0){
   int int_N = static_cast<int>(N);
   random_list__ = new double[int_N]();
   for(int i=0; i<int_N; ++i){
@@ -34,7 +34,7 @@ fizz_rnd_list::fizz_rnd_list(float N): cur_N(static_cast<int>(N)),x_mean(0){
 }
 
 //Initialize fizz_rnd_list if the input array length, N, is an int
-fizz_rnd_list::fizz_rnd_list(int N): cur_N(N), x_mean(0){
+fizz_rnd_list::fizz_rnd_list(int N): cur_N__(N), x_mean__(0){
   random_list__ = new double[N]();
   for(int i=0; i<N; ++i){
     random_list__[i]=rand() % 1000;
@@ -68,20 +68,20 @@ double fizz_rnd_list::get_std_dev(int X_ind){
   //This is just a standard algorithm to loop through the indices and calculate
   // the standard deviation. It is not very efficient right now. TODO
   for(int i=0; i<(X_ind+1); ++i){
-    cur_tot+=(random_list__[i]-x_mean)*(random_list__[i]-x_mean); 
+    cur_tot+=(random_list__[i]-x_mean__)*(random_list__[i]-x_mean__); 
   }
   return sqrt(cur_tot/(float)(X_ind+1));
 }
 
 std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   //Fail if there are no entries in the array
-  if(cur_N==0){
+  if(cur_N__==0){
     std::cerr<<"ERROR: Random array has no entries"<<std::endl;
     exit(EXIT_FAILURE);
   } 
   int cur_index = -1;
   double close_val = -1;
-  int cur_len = cur_N; 
+  int cur_len = cur_N__; 
   double* cur_list = random_list__;
   while(cur_len>1){
     //In order to quickly access the halves, instead of copying from the 
@@ -91,15 +91,15 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
     //Use a binary tree in order to keep only looking in parts of the list
     //that contain the final value, so the algorithm will be O(log(n)) and 
     // not O(n)
-    if(std::abs(firstHalf[(cur_len/2)-1]-X)<std::abs(secondHalf[0]-X)){
-      if(cur_len==cur_N){
+    if(std::abs(firstHalf[0]-X)<std::abs(firstHalf[cur_len-1]-X)){
+      if(cur_len==cur_N__){
         cur_index = 0;
       }
       cur_len = (cur_len/2);
       cur_list = firstHalf;
     }
     else{
-      if(cur_len==cur_N){
+      if(cur_len==cur_N__){
         cur_index = cur_len/2; 
       }
       else{
@@ -114,10 +114,10 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   }
   //Use my very inefficient methods for calculating the mean and the standard
   // deviation for now
-  x_mean = get_mean(cur_index);
+  x_mean__ = get_mean(cur_index);
   double std_dev = get_std_dev(cur_index);
 
-  return std::make_tuple(close_val,cur_index,x_mean,std_dev);
+  return std::make_tuple(close_val,cur_index,x_mean__,std_dev);
 }
 
 // Get the length of the array and the number of times to iterate from the 
