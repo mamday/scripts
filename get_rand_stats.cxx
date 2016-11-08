@@ -150,7 +150,7 @@ int main(int argc, char* argv[]){
       rand_num = rand() % 1000;
       fin_tup = i_rnd.get_stats(rand_num);
       //The following will print the tuple if you want. Could make this a function
-      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
     }
   }
   else if(in_string=="one"){
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]){
       rand_num = (float)rand()/(float)(RAND_MAX);
       fin_tup = f_rnd.get_stats(rand_num); 
       //The following will print the tuple if you want. Could make this a function
-      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
     }
   }
   else{

@@ -66,7 +66,7 @@ def main():
     cur_stat = random.random()
     val,ind,mean,std_dev = my_rand_list.get_stats(cur_stat) 
     #A simple way to output the result, if you want
-    print cur_stat,val,ind,mean,std_dev
+    #print cur_stat,val,ind,mean,std_dev
 
 if __name__=="__main__":
   main()
