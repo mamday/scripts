@@ -68,7 +68,6 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   int cur_len = cur_N; 
   double* cur_list = random_list__;
   while(cur_len>1){
-    std::cout<<"Debug "<<cur_list[0]<<" "<<cur_list[cur_len/2]<<" "<<cur_len<<" "<<cur_index<<std::endl;
     double *firstHalf = &cur_list[0];
     double *secondHalf = &cur_list[cur_len/2];
     if(std::abs(firstHalf[(cur_len/2)-1]-X)<std::abs(secondHalf[0]-X)){
@@ -97,14 +96,24 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   return std::make_tuple(close_val,cur_index,x_mean,std_dev);
 }
 
-int main(){
-  float num = 10.0;
-  int i_num = 10;
+int main(int argc, char* argv[]){
+  if(argc != 3) return -1;
+  float num = atof(argv[1]);
+  std::string in_string(argv[2]);
   fizz_rnd_list f_rnd(num);
   int_rnd_list i_rnd(num);
-  std::tuple<double,int,double,double> tup1 = f_rnd.get_stats(0.4); 
-  std::tuple<double,int,double,double> tup2 = i_rnd.get_stats(500);
-  std::cout<<std::get<0>(tup1)<<" "<<std::get<1>(tup1)<<" "<<std::get<2>(tup1)<<" "<<std::get<3>(tup1)<<std::endl;
-  std::cout<<std::get<0>(tup2)<<" "<<std::get<1>(tup2)<<" "<<std::get<2>(tup2)<<" "<<std::get<3>(tup2)<<std::endl;
+  std::tuple<double,int,double,double> fin_tup;
+  double rand_num;
+  if(in_string=="thousand"){
+    rand_num = rand() % 1000;
+    fin_tup = i_rnd.get_stats(rand_num);
+  }
+  if(in_string=="one"){
+    rand_num = (float)rand()/(float)(RAND_MAX);
+    fin_tup = f_rnd.get_stats(rand_num); 
+  }
+  //The following will print the tuple if you want. Could make this a function
+  std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+
 }
 
