@@ -133,7 +133,7 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
 int main(int argc, char* argv[]){
   //Exit if the wrong number of inputs are given
   if(argc != 3){
-    std::err<<"ERROR: Received the incorrect number of arguments"<<std::endl;
+    std::cerr<<"ERROR: Received the incorrect number of arguments"<<std::endl;
     exit(EXIT_FAILURE);
   } 
   //Make the input a float so that we get the correct behavior of fizz_rnd_list
@@ -156,7 +156,7 @@ int main(int argc, char* argv[]){
   }
   else{
     //Fail if the input is not 'one' or 'thousand'
-    std::err<<"ERROR: Invalid algorithm classifier"<<std::endl;
+    std::cerr<<"ERROR: Invalid algorithm classifier"<<std::endl;
     exit(EXIT_FAILURE);
   }
   //The following will print the tuple if you want. Could make this a function
