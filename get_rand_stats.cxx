@@ -100,15 +100,15 @@ int main(int argc, char* argv[]){
   if(argc != 3) return -1;
   float num = atof(argv[1]);
   std::string in_string(argv[2]);
-  fizz_rnd_list f_rnd(num);
-  int_rnd_list i_rnd(num);
   std::tuple<double,int,double,double> fin_tup;
   double rand_num;
   if(in_string=="thousand"){
+    int_rnd_list i_rnd(num);
     rand_num = rand() % 1000;
     fin_tup = i_rnd.get_stats(rand_num);
   }
   if(in_string=="one"){
+    fizz_rnd_list f_rnd(num);
     rand_num = (float)rand()/(float)(RAND_MAX);
     fin_tup = f_rnd.get_stats(rand_num); 
   }
