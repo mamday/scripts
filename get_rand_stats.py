@@ -130,6 +130,16 @@ if __name__=="__main__":
   main()
 
 '''Tests that can be run with python -m pytest get_rand_stats.py'''
+
+'''Test that implementing the fizz_rnd_list class creates a list of random 
+numbers that has a length equal to the input'''
+def test_fizz_rnd_list_initiation():
+  l_len = 10
+  test_list = fizz_rnd_list(l_len)
+  assert(isinstance(test_list.rand_list,list) and len(test_list.rand_list)==10)
+
+'''Test the algorithm that calculates the standard deviation using the 
+approximation for a uniform distribution'''
 def test_uniform_std_dev():
   test_list = fizz_rnd_list(1000)
   test_rand = test_list.rand_list
@@ -201,4 +211,20 @@ def test_get_mean_threepeat():
   mean2 = test_list.get_mean(3)
   assert mean2==((test_rand[0]+test_rand[1] + test_rand[2])/3)
 
-
+'''Test that get_stats gets the correct index and value in the list, and then
+gets the mean and standard deviation'''
+def test_get_stats():
+  test_list = fizz_rnd_list(3)
+  test_rand = test_list.rand_list
+  test_val = 0.4
+  val,ind,mean,std_dev = test_list.get_stats(test_val)
+  cor_ind_val = min(enumerate(abs(numpy.array(test_rand)-test_val)),key=lambda x: x[1]) 
+  cor_ind = cor_ind_val[0]
+  cor_val = test_rand[cor_ind] 
+  if(cor_ind>0):
+    cor_mean = numpy.mean(test_rand[:cor_ind])
+    cor_std = numpy.std(test_rand[:cor_ind+1])
+  else:
+    cor_mean=0
+    cor_std=0
+  assert(ind==cor_ind and val==cor_val and mean==cor_mean and std_dev==cor_std)
