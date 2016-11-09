@@ -80,7 +80,19 @@ class fizz_rnd_list(object):
     while(len(r_nums)>1):
       low_nums = r_nums[:(len(r_nums)/2)]
       high_nums = r_nums[(len(r_nums)/2):]
-      if(abs(low_nums[0]-X)<abs(high_nums[-1]-X)):
+      if(low_nums[-1]==high_nums[0]):
+        if((X-low_nums[-1])<0):
+          if(cur_index==-1):
+            cur_index = 0
+          r_nums = low_nums
+        else:
+          if(cur_index==-1):
+            cur_index = len(r_nums)/2
+          else:
+            cur_index = cur_index + len(r_nums)/2
+          r_nums = high_nums
+
+      elif(abs(low_nums[-1]-X)<abs(high_nums[0]-X)):
         if(cur_index==-1):
           cur_index = 0 
         else:
