@@ -62,6 +62,10 @@ class fizz_rnd_list(object):
     self.std_dev_dict[ind]=numpy.sqrt(cur_tot/(ind))
 
     return self.std_dev_dict[ind] 
+  '''Function that just returns the expected standard deviation of a uniform 
+  distribution between 0 and the index before the selected index'''
+  def get_uniform_std_dev(self,ind):
+    return numpy.sqrt(((float(ind-1)/float(len(self.rand_list)))**2)/12.)
 
   def get_stats(self,X):
     '''Use a binary tree to find the input value in the sorted list. 
@@ -97,12 +101,17 @@ class fizz_rnd_list(object):
     a dictionary also only marginally improves the speed for large N'''
     new_list = self.rand_list[:cur_index+1]
     ind_mean = self.get_mean(cur_index)
+    '''If you are willing to accept some error (<10% for N>1000) you can quickly
+    calculate the standard deviation from the index, since the distribution 
+    is uniform'''
     ind_std=0
-    if(not(cur_index in self.std_dev_dict)):
-      ind_std = numpy.std(new_list)
+    if(len(self.rand_list)<1000):
+      if(not(cur_index in self.std_dev_dict)):
+        ind_std = numpy.std(new_list)
+      else:
+        ind_std = self.std_dev_dict[cur_index]
     else:
-      ind_std = self.std_dev_dict[cur_index]
-    print cur_index,ind_mean,ind_std
+      ind_std = self.get_uniform_std_dev(cur_index)
     return close_val,cur_index,ind_mean,ind_std           
 
 '''Implement the efficient algorithm for calculating the value and index of
@@ -121,6 +130,12 @@ if __name__=="__main__":
   main()
 
 '''Tests that can be run with python -m pytest get_rand_stats.py'''
+def test_uniform_std_dev():
+  test_list = fizz_rnd_list(1000)
+  test_rand = test_list.rand_list
+  mean = test_list.get_mean(1000)
+  u_std_dev = test_list.get_uniform_std_dev(300)
+  assert (u_std_dev-numpy.std(test_rand[:300]))/(numpy.std(test_rand[:300]))<0.1  
 
 '''Test that if I create a list with one entry that the mean is that entry'''
 def test_get_mean_zero():
@@ -165,17 +180,6 @@ def test_get_mean_two():
 
   assert mean==((test_rand[0]+test_rand[1]+test_rand[2])/3)
 
-'''Test that if I create a list with three entries that the standard deviation 
-is the square root of the difference of those two entries from their mean 
-divided by three.'''
-
-def test_get_std_dev_two():
-  test_list = fizz_rnd_list(3)
-  test_rand = test_list.rand_list
-  mean = test_list.get_mean(3)
-  std_dev = test_list.get_std_dev(3)
-
-  assert std_dev==numpy.sqrt((((test_rand[0]-mean)*(test_rand[0]-mean))/3)+(((test_rand[1]-mean)*(test_rand[1]-mean))/3)+(((test_rand[2]-mean)*(test_rand[2]-mean))/3))
 
 '''Test that if I calculate the mean up to index 1, and then calculate the mean 
 up to index two, that the result is the same as if I calculate the mean just
