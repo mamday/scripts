@@ -9,6 +9,9 @@ class fizz_rnd_list(object):
         to O(log(n)), sort the list once on instantiation'''
     self.rand_list = [random.random() for i in xrange(0,N)]
     self.rand_list.sort()
+    self.mean_dict = {0:0}
+    self.std_dev_dict = {0:0}
+    self.max_dict_ind = 0 
   def __str__(self):
     '''Print a list of the numbers in self.rand_list'''
     out_str = '['
@@ -18,6 +21,30 @@ class fizz_rnd_list(object):
       out_str = out_str[:-2]
     out_str+=']'
     return out_str 
+  '''This version of calculating the mean saves the result if an index has
+  already been calculated. If the index is greater than the maximum index
+  that was ever calculated, it starts from the maximum index value and only
+  iterates until it gets to to the current index. This saves time, and is 
+  most efficient, because the mean does not have to be calculated multiple 
+  times for the same index, and takes fewer iterations to calculate the more
+  you run the algorithm'''
+  def get_mean(self,ind):
+    cur_tot=0.0
+    if(ind in self.mean_dict):
+      return self.mean_dict[ind]
+
+    if(ind>self.max_dict_ind):
+      cur_tot = (self.max_dict_ind)*self.mean_dict[self.max_dict_ind] 
+
+    for i in xrange(self.max_dict_ind,ind):
+       cur_tot+=self.rand_list[i]
+       self.mean_dict[i+1]=cur_tot/(i+1)
+
+    if((ind)>self.max_dict_ind):
+      self.max_dict_ind=ind
+
+    return cur_tot/(ind)
+
   def get_stats(self,X):
     '''Use a binary tree to find the input value in the sorted list. 
     By keeping only the half of the list that contains the number closest 
@@ -51,7 +78,7 @@ class fizz_rnd_list(object):
        the result if it is run multiple times'''
     new_list = self.rand_list[:cur_index+1]
     ind_std = numpy.std(new_list)
-    ind_mean = numpy.mean(new_list)
+    ind_mean = self.get_mean(cur_index)
     return close_val,cur_index,ind_mean,ind_std           
 
 '''Implement the efficient algorithm for calculating the value and index of
@@ -70,3 +97,49 @@ def main():
 
 if __name__=="__main__":
   main()
+
+'''Tests that can be run with python -m pytest get_rand_stats.py'''
+
+'''Test that if I create a list with one entry that the mean is that entry'''
+def test_get_mean_zero():
+  test_list = fizz_rnd_list(1)
+  test_rand = test_list.rand_list
+  mean = test_list.get_mean(1)
+  assert mean==test_rand[0]
+
+'''Test that if I create a list with two entries that the mean is the sum of 
+those entries divided by two'''
+def test_get_mean_one():
+  test_list = fizz_rnd_list(2)
+  test_rand = test_list.rand_list
+  mean = test_list.get_mean(2)
+  assert mean==((test_rand[0]+test_rand[1])/2)
+
+'''Test that if I create a list with three entries that the mean is the sum of 
+those entries divided by three'''
+def test_get_mean_two():
+  test_list = fizz_rnd_list(3)
+  test_rand = test_list.rand_list
+  mean = test_list.get_mean(3)
+
+'''Test that if I calculate the mean up to index 1, and then calculate the mean 
+up to index two, that the result is the same as if I calculate the mean just
+nce up to index two'''
+def test_get_mean_repeat():
+  test_list = fizz_rnd_list(2)
+  test_rand = test_list.rand_list
+  mean = test_list.get_mean(1)
+  mean1 = test_list.get_mean(2)
+  assert mean1==((test_rand[0]+test_rand[1])/2)
+
+'''Test that if I calculate the mean up to index 1, and then calculate the mean 
+up to index two, and then calculate the mean up to index 3 that the result is the same as if I calculate the mean just once up to index three'''
+def test_get_mean_threepeat():
+  test_list = fizz_rnd_list(3)
+  test_rand = test_list.rand_list
+  mean = test_list.get_mean(1)
+  mean1 = test_list.get_mean(2)
+  mean2 = test_list.get_mean(3)
+  assert mean2==((test_rand[0]+test_rand[1] + test_rand[2])/3)
+
+
