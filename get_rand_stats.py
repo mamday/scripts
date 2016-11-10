@@ -1,9 +1,11 @@
 import numpy,sys,random
+
 '''Class that creates a list of random numbers between 0-1, then uses its 
 get_stats method to find the index of the value in the list that is closest
 to the input. Once the index is found, it calculates the std dev and mean
 of the list up to that index'''
 class fizz_rnd_list(object):
+
   def __init__(self,N):
     '''Create the list once. To reduce the complexity of get_stats() from O(n)
         to O(log(n)), sort the list once on instantiation'''
@@ -12,14 +14,17 @@ class fizz_rnd_list(object):
     self.mean_dict = {0:0}
     self.std_dev_dict = {0:0}
     self.max_mean_dict_ind = 0 
+
   def __str__(self):
     '''Print a list of the numbers in self.rand_list'''
     out_str = '['
     for i in self.rand_list:
       out_str+=str(i)+', '
+
     if(len(out_str)>1):
       out_str = out_str[:-2]
     out_str+=']'
+
     return out_str 
 
   '''This version of calculating the mean saves the result if an index has
@@ -30,6 +35,7 @@ class fizz_rnd_list(object):
   times for the same index, and takes fewer iterations to calculate the more
   you run the algorithm'''
   def get_mean(self,ind):
+
     cur_tot=0.0
     if(ind in self.mean_dict):
       return self.mean_dict[ind]
@@ -56,15 +62,18 @@ class fizz_rnd_list(object):
     cur_tot=0.0
     if(ind in self.std_dev_dict):
       return self.std_dev_dict[ind]
+
     var_array = (numpy.array(self.rand_list[:ind])-self.mean_dict[ind])*(numpy.array(self.rand_list[:ind])-self.mean_dict[ind])
     cur_tot= sum(var_array)
 
     self.std_dev_dict[ind]=numpy.sqrt(cur_tot/(ind))
 
     return self.std_dev_dict[ind] 
+
   '''Function that just returns the expected standard deviation of a uniform 
   distribution between 0 and the index before the selected index'''
   def get_uniform_std_dev(self,ind):
+
     return numpy.sqrt(((float(ind-1)/float(len(self.rand_list)))**2)/12.)
 
   def get_stats(self,X):
@@ -76,16 +85,21 @@ class fizz_rnd_list(object):
     '''Raise an exception if the list is empty'''
     if(len(self.rand_list)==0):
       raise Exception('Random list contains no values')
+
     r_nums = self.rand_list
     while(len(r_nums)>1):
       low_nums = r_nums[:(len(r_nums)/2)]
       high_nums = r_nums[(len(r_nums)/2):]
+
       if(low_nums[-1]==high_nums[0]):
+
         if((X-low_nums[-1])<0):
           if(cur_index==-1):
             cur_index = 0
           r_nums = low_nums
+
         else:
+
           if(cur_index==-1):
             cur_index = len(r_nums)/2
           else:
@@ -93,19 +107,24 @@ class fizz_rnd_list(object):
           r_nums = high_nums
 
       elif(abs(low_nums[-1]-X)<abs(high_nums[0]-X)):
+
         if(cur_index==-1):
           cur_index = 0 
         else:
           pass  
         r_nums = low_nums
+
       else:
+
         if(cur_index==-1):
           cur_index = len(r_nums)/2 
         else:
           cur_index = cur_index + len(r_nums)/2 
         r_nums = high_nums
+
       if(len(r_nums)==1):
         close_val=r_nums[0]
+
     '''Implemented a new method for calculating the mean that stores previous
     results so that multiple calls are more efficient. Find that using the 
     numpy method to calculate the standard deviation is more efficient than
@@ -118,12 +137,15 @@ class fizz_rnd_list(object):
     is uniform'''
     ind_std=0
     if(len(self.rand_list)<1000):
+
       if(not(cur_index in self.std_dev_dict)):
         ind_std = numpy.std(new_list)
       else:
         ind_std = self.std_dev_dict[cur_index]
+
     else:
       ind_std = self.get_uniform_std_dev(cur_index)
+
     return close_val,cur_index,ind_mean,ind_std           
 
 '''Implement the efficient algorithm for calculating the value and index of
@@ -132,9 +154,11 @@ cur_stat. Then calculate the mean and standard deviation up to the index.'''
 def main():
   n_iters = int(sys.argv[1])
   my_rand_list = fizz_rnd_list(n_iters)
+
   for it in xrange(0,n_iters): 
     cur_stat = random.random()
     val,ind,mean,std_dev = my_rand_list.get_stats(cur_stat) 
+
     #A simple way to output the result, if you want
     #print cur_stat,val,ind,mean,std_dev
 
