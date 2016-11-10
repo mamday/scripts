@@ -2,6 +2,7 @@
 #include <iostream>
 #include <tuple>
 #include <array>
+#include <unordered_map>
 
 //This class creates a list of random values either between 0-1 (if it is 
 //initialized with a float) or between 0-1000 (if it is initialized with an
@@ -29,6 +30,10 @@ class fizz_rnd_list{
     int cur_N__;
     //Mean from get_mean()
     double x_mean__;
+    //A map of all values of the mean
+    std::unordered_map<int,double> mean_map__;
+    //The current highest value in the mean map
+    int max_mean_ind__;
 };
 
 //This class inherits from fizz_rnd_list, but always calls its integer 

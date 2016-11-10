@@ -18,10 +18,11 @@ int_rnd_list::~int_rnd_list(){
 }
 
 //Initialize fizz_rnd_list if the input array length, N, is a float
-fizz_rnd_list::fizz_rnd_list(float N): cur_N__(static_cast<int>(N)),x_mean__(0){
+fizz_rnd_list::fizz_rnd_list(float N): cur_N__(static_cast<int>(N)),x_mean__(0),max_mean_ind__(0){
   int int_N = static_cast<int>(N);
   random_list__ = new double[int_N]();
   for(int i=0; i<int_N; ++i){
+    mean_map__[i]=0;
     random_list__[i]=((float)rand()/(float)(RAND_MAX));
   }
   //Sort the algorithm on initialization so that subsequent calls to get_stats
@@ -34,9 +35,10 @@ fizz_rnd_list::fizz_rnd_list(float N): cur_N__(static_cast<int>(N)),x_mean__(0){
 }
 
 //Initialize fizz_rnd_list if the input array length, N, is an int
-fizz_rnd_list::fizz_rnd_list(int N): cur_N__(N), x_mean__(0){
+fizz_rnd_list::fizz_rnd_list(int N): cur_N__(N), x_mean__(0), max_mean_ind__(0){
   random_list__ = new double[N]();
   for(int i=0; i<N; ++i){
+    mean_map__[i]=0;
     random_list__[i]=rand() % 1000;
   }
   //Sort the algorithm on initialization so that subsequent calls to get_stats
@@ -55,12 +57,29 @@ fizz_rnd_list::~fizz_rnd_list(){
 
 double fizz_rnd_list::get_mean(int X_ind){
   double cur_tot = 0;
-  //This is just a standard algorithm to loop through the indices and calculate
-  // the mean. It is not very efficient right now. TODO
-  for(int i=0; i<(X_ind+1); ++i){
-    cur_tot+=random_list__[i]; 
+  //If the value already exists, don't calculate it again
+  if(mean_map__[X_ind]!=0){
+    return mean_map__[X_ind];
   }
-  return cur_tot/(float)(X_ind+1);
+  //If the current index is greater than the previous highest index, get the
+  //start calculating the mean at the previous highest index
+  if(X_ind>max_mean_ind__){
+    cur_tot = max_mean_ind__*mean_map__[max_mean_ind__];
+  } 
+
+  //Calculate the mean continuously and save the value up to the current index
+  for(int i=max_mean_ind__; i<(X_ind); ++i){
+    cur_tot+=random_list__[i]; 
+    mean_map__[i+1]=cur_tot/(i+1);
+  }
+
+  //If the current index is higher than the previous index, replace it as the
+  //maximum index
+  if(X_ind>max_mean_ind__){
+    max_mean_ind__=X_ind;
+  }
+
+  return cur_tot/(float)(X_ind);
 }
 
 double fizz_rnd_list::get_std_dev(int X_ind){
@@ -176,21 +195,21 @@ int main(int argc, char* argv[]){
   std::tuple<double,int,double,double> fin_tup;
   double rand_num;
   if(in_string=="thousand"){
+    int_rnd_list i_rnd(num);
     for(int i=0; i<(num+1); ++i){
-      int_rnd_list i_rnd(num);
       rand_num = rand() % 1000;
       fin_tup = i_rnd.get_stats(rand_num);
       //The following will print the tuple if you want. Could make this a function
-      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
     }
   }
   else if(in_string=="one"){
+    fizz_rnd_list f_rnd(num);
     for(int i=0; i<(num+1); ++i){
-      fizz_rnd_list f_rnd(num);
       rand_num = (float)rand()/(float)(RAND_MAX);
       fin_tup = f_rnd.get_stats(rand_num); 
       //The following will print the tuple if you want. Could make this a function
-      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
     }
   }
   else{
