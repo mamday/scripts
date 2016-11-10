@@ -3,6 +3,11 @@
 #include <tuple>
 #include <array>
 
+//This class creates a list of random values either between 0-1 (if it is 
+//initialized with a float) or between 0-1000 (if it is initialized with an
+// integer). The method get_stats(X) will then find the value in the random 
+//list that is closest to X and the index of that value. It then outputs the
+// mean  and standard deviation of all entries of the list up to that value.
 class fizz_rnd_list{
   public:
     //Constructors that take the number N of random numbers as its argument
@@ -26,6 +31,8 @@ class fizz_rnd_list{
     double x_mean__;
 };
 
+//This class inherits from fizz_rnd_list, but always calls its integer 
+//constructor (so that the random list has values from 0-1000)
 class int_rnd_list: public fizz_rnd_list{
   public:
     //Constructor that takes the number N of random numbers as its argument 

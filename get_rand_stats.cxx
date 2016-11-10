@@ -91,7 +91,38 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
     //Use a binary tree in order to keep only looking in parts of the list
     //that contain the final value, so the algorithm will be O(log(n)) and 
     // not O(n)
-    if(std::abs(firstHalf[0]-X)<std::abs(firstHalf[cur_len-1]-X)){
+    if(firstHalf[(cur_len/2)-1]==secondHalf[0]){
+      //If the values in the middle of the list are equal, move to the low 
+      //values if the difference between the input and the middle value is 
+      //negative. This is because, if the value is negative, then that means the
+      //middle value is greater than the input value, so therefore we should 
+      //take the list containing smaller values (the left branch'''
+
+      if((X-firstHalf[(cur_len/2)-1])<0){
+
+        if(cur_len==cur_N__){
+          cur_index = 0;
+        }
+        cur_len = (cur_len/2);
+        cur_list = firstHalf;
+
+      }
+      else{
+        if(cur_len==cur_N__){
+          cur_index = cur_len/2;
+        }
+        else{
+          cur_index = cur_index + (cur_len/2);
+        }
+        cur_len = ceil((float)cur_len/2.0);
+        cur_list = secondHalf;
+
+      }
+
+    }
+    //If the values are not equal, go in the direction that is closer to the 
+    //input value X
+    if(std::abs(firstHalf[(cur_len/2)-1]-X)<std::abs(secondHalf[0]-X)){
       if(cur_len==cur_N__){
         cur_index = 0;
       }
@@ -150,7 +181,7 @@ int main(int argc, char* argv[]){
       rand_num = rand() % 1000;
       fin_tup = i_rnd.get_stats(rand_num);
       //The following will print the tuple if you want. Could make this a function
-      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
     }
   }
   else if(in_string=="one"){
@@ -159,7 +190,7 @@ int main(int argc, char* argv[]){
       rand_num = (float)rand()/(float)(RAND_MAX);
       fin_tup = f_rnd.get_stats(rand_num); 
       //The following will print the tuple if you want. Could make this a function
-      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
     }
   }
   else{
