@@ -90,7 +90,11 @@ class fizz_rnd_list(object):
     while(len(r_nums)>1):
       low_nums = r_nums[:(len(r_nums)/2)]
       high_nums = r_nums[(len(r_nums)/2):]
-
+      '''If the values in the middle of the list are equal, move to the low 
+      values if the difference between the input and the middle value is 
+      negative. This is because, if the value is negative, then that means the
+      middle value is greater than the input value, so therefore we should take
+      the list containing smaller values (the left branch'''
       if(low_nums[-1]==high_nums[0]):
 
         if((X-low_nums[-1])<0):
@@ -105,7 +109,8 @@ class fizz_rnd_list(object):
           else:
             cur_index = cur_index + len(r_nums)/2
           r_nums = high_nums
-
+      '''If the values are not equal, go in the direction that is closer to the
+      input value X'''
       elif(abs(low_nums[-1]-X)<abs(high_nums[0]-X)):
 
         if(cur_index==-1):
