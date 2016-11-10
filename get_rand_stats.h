@@ -23,6 +23,7 @@ class fizz_rnd_list{
     std::tuple<double, int, double, double> get_stats(double X);
     double get_mean(int X_ind);
     double get_std_dev(int X_ind);
+    double get_uniform_std_dev(int X_ind);
   private:
     //Array to hold the list of random numbers
     double* random_list__;
@@ -30,8 +31,11 @@ class fizz_rnd_list{
     int cur_N__;
     //Mean from get_mean()
     double x_mean__;
-    //A map of all values of the mean
+    //A map of all values of the mean. Use unordered_map because lookup is O(1)
     std::unordered_map<int,double> mean_map__;
+    //A map of all values of the standard deviation. 
+    //Use unordered_map because lookup is O(1)
+    std::unordered_map<int,double> std_dev_map__;
     //The current highest value in the mean map
     int max_mean_ind__;
 };

@@ -21,8 +21,11 @@ int_rnd_list::~int_rnd_list(){
 fizz_rnd_list::fizz_rnd_list(float N): cur_N__(static_cast<int>(N)),x_mean__(0),max_mean_ind__(0){
   int int_N = static_cast<int>(N);
   random_list__ = new double[int_N]();
+  //Initialize the maps and the random list once when the class is initiated to
+  //avoid spending time looking through the maps for a key later
   for(int i=0; i<int_N; ++i){
     mean_map__[i]=0;
+    std_dev_map__[i]=0;
     random_list__[i]=((float)rand()/(float)(RAND_MAX));
   }
   //Sort the algorithm on initialization so that subsequent calls to get_stats
@@ -37,8 +40,11 @@ fizz_rnd_list::fizz_rnd_list(float N): cur_N__(static_cast<int>(N)),x_mean__(0),
 //Initialize fizz_rnd_list if the input array length, N, is an int
 fizz_rnd_list::fizz_rnd_list(int N): cur_N__(N), x_mean__(0), max_mean_ind__(0){
   random_list__ = new double[N]();
+  //Initialize the maps and the random list once when the class is initiated to
+  //avoid spending time looking through the maps for a key later
   for(int i=0; i<N; ++i){
     mean_map__[i]=0;
+    std_dev_map__[i]=0;
     random_list__[i]=rand() % 1000;
   }
   //Sort the algorithm on initialization so that subsequent calls to get_stats
@@ -57,7 +63,9 @@ fizz_rnd_list::~fizz_rnd_list(){
 
 double fizz_rnd_list::get_mean(int X_ind){
   double cur_tot = 0;
-  //If the value already exists, don't calculate it again
+  //If the value already exists, don't calculate it again. This is much more
+  //efficient than calculating the mean for the same list multiple times when
+  //it has already been calculated before
   if(mean_map__[X_ind]!=0){
     return mean_map__[X_ind];
   }
@@ -84,12 +92,23 @@ double fizz_rnd_list::get_mean(int X_ind){
 
 double fizz_rnd_list::get_std_dev(int X_ind){
   double cur_tot = 0;
-  //This is just a standard algorithm to loop through the indices and calculate
-  // the standard deviation. It is not very efficient right now. TODO
-  for(int i=0; i<(X_ind+1); ++i){
-    cur_tot+=(random_list__[i]-x_mean__)*(random_list__[i]-x_mean__); 
+  //If the standard deviation has already been calculated, don't calculate it 
+  //again, to be more efficient.
+  if(std_dev_map__[X_ind]!=0){
+    return std_dev_map__[X_ind];
   }
-  return sqrt(cur_tot/(float)(X_ind+1));
+  //Otherwise calculate the stardard deviation from the current value of the mean
+  for(int i=0; i<(X_ind); ++i){
+    cur_tot+=(random_list__[i]-mean_map__[X_ind])*(random_list__[i]-mean_map__[X_ind]); 
+  }
+  //Save the current value in the map
+  std_dev_map__[X_ind]=sqrt(cur_tot/(float)(X_ind));
+
+  return sqrt(cur_tot/(float)(X_ind));
+}
+
+double fizz_rnd_list::get_uniform_std_dev(int X_ind){
+  return sqrt((((float)(X_ind-1)/float(cur_N__))*((float)(X_ind-1)/float(cur_N__)))/12); 
 }
 
 std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
@@ -162,10 +181,24 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
       close_val=cur_list[0];
     }
   }
-  //Use my very inefficient methods for calculating the mean and the standard
-  // deviation for now
+  //Implement a method for calculating the mean that stores the results for 
+  // every index so they don't have to be calculated again
+  //Implement a brute force method for calculating the standard deviation
+  //using the fact that it is sampled from a uniform distribution if the
+  //length of the random list is >1000 (in which case the error is mostly <10%)
+  double x_mean__=0;
+  double std_dev=0;
+  if(cur_index==0){
+    return std::make_tuple(close_val,cur_index,x_mean__,std_dev);
+  }
+
   x_mean__ = get_mean(cur_index);
-  double std_dev = get_std_dev(cur_index);
+  if(cur_N__<1000){
+    std_dev = get_std_dev(cur_index);
+  }
+  else{
+    std_dev = get_uniform_std_dev(cur_index);
+  }
 
   return std::make_tuple(close_val,cur_index,x_mean__,std_dev);
 }
