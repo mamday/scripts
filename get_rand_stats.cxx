@@ -324,7 +324,7 @@ void test_rnd_list::test_get_mean_threepeat(){
 }
 
 //Test that the get_stats algorithm gets the highest value in the list if I give//a number greater than 1 and the lowest number if I give a number lower than 0
-void test_rnd_list::test_get_stats(){
+void test_rnd_list::test_get_stats_ends(){
   float in_len = 3;
   fizz_rnd_list test_list(in_len);
   double* test_rand = test_list.get_list();
@@ -334,6 +334,28 @@ void test_rnd_list::test_get_stats(){
 
   std::tuple<double, int, double, double> stats1 = test_list.get_stats(-1); 
   assert(std::get<1>(stats1)==0 && std::get<0>(stats1)==test_rand[0]); 
+}
+void test_rnd_list::test_get_stats(){
+  float in_len = 1000;
+  fizz_rnd_list test_list(in_len);
+  int test_val = 500;
+  double* test_rand = test_list.get_list();
+  std::tuple<double, int, double, double> stats = test_list.get_stats(test_val); 
+
+  int cor_ind =0;
+  double cor_val=0;
+  double diff=1001;
+  for(int i=0; i<in_len; ++i){
+    double cur_diff=std::abs(test_val-test_rand[i]);
+    if(cur_diff<diff){
+      cor_ind=i;
+      cor_val=test_rand[i];
+      diff=cur_diff;
+    }
+  }
+  //std::cout<<std::get<1>(stats)<<" "<<cor_ind<<" "<<std::get<0>(stats)<<" "<<cor_val<<std::endl;
+  assert(std::get<1>(stats)==cor_ind && std::get<0>(stats)==cor_val); 
+  
 }
 
 // Get the length of the array and the number of times to iterate from the 
@@ -367,6 +389,7 @@ int main(int argc, char* argv[]){
     tester.test_get_mean_repeat();
     tester.test_get_mean_threepeat();
     tester.test_get_stats();
+    tester.test_get_stats_ends();
     std::cout<<"Passed!"<<std::endl;
   }
   //Exit if the wrong number of inputs are given

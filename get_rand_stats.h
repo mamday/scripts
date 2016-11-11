@@ -72,4 +72,5 @@ class test_rnd_list{
     void test_get_mean_repeat();
     void test_get_mean_threepeat();
     void test_get_stats();
+    void test_get_stats_ends();
 };
