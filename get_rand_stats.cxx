@@ -116,6 +116,8 @@ double fizz_rnd_list::get_uniform_std_dev(int X_ind){
   return sqrt((((float)(X_ind-1)/float(cur_N__))*((float)(X_ind-1)/float(cur_N__)))/12); 
 }
 
+//Return stats as tuple with 1)Value closes to X 2)Index of Value 3)Mean up to
+//Index and 4)Std. Dev up to Index
 std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   //Fail if there are no entries in the array
   if(cur_N__==0){
@@ -321,6 +323,17 @@ void test_rnd_list::test_get_mean_threepeat(){
   assert(mean2==((test_rand[0]+test_rand[1]+test_rand[2])/3));
 }
 
+//Test that the get_stats algorithm gets the highest value in the list if I give//a number greater than 1 and the lowest number if I give a number lower than 0
+void test_rnd_list::test_get_stats(){
+  float in_len = 3;
+  fizz_rnd_list test_list(in_len);
+  double* test_rand = test_list.get_list();
+  std::tuple<double, int, double, double> stats = test_list.get_stats(2); 
+  assert(std::get<1>(stats)==2 && std::get<0>(stats)==test_rand[2]); 
+  std::tuple<double, int, double, double> stats1 = test_list.get_stats(-1); 
+  assert(std::get<1>(stats1)==0 && std::get<0>(stats1)==test_rand[0]); 
+}
+
 // Get the length of the array and the number of times to iterate from the 
 // command line (num). Then initialize either int_rnd_list (if the second 
 // argument is thousand) or fizz_rnd_list(if the second argument is one).
@@ -351,6 +364,7 @@ int main(int argc, char* argv[]){
     tester.test_get_mean_two();
     tester.test_get_mean_repeat();
     tester.test_get_mean_threepeat();
+    tester.test_get_stats();
   }
   //Exit if the wrong number of inputs are given
   else if(argc != 3){
