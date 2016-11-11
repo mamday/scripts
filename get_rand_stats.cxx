@@ -189,8 +189,10 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   }
   //If the previous value is the same as the current value, look backwards in 
   //the list by halves (splitting the list) until it finds the earliest value
-  //that is the same. TODO Make a function to reduce the number of times I use
-  //the binary tree logic for calculating the current length and index
+  //that is the same. This fixes the problem where the closest value is smaller
+  //than the input value and occurs multiple times. TODO Make a function to 
+  //reduce the number of times I use the binary tree logic for calculating the
+  // current length and index
   if(cur_index>0 && close_val==random_list__[cur_index-1]){
     double* cur_half = random_list__;
     int cur_len = cur_index+1; 
@@ -222,8 +224,8 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   //Implement a method for calculating the mean that stores the results for 
   // every index so they don't have to be calculated again
   //Implement a brute force method for calculating the standard deviation
-  //using the fact that it is sampled from a uniform distribution if the
-  //length of the random list is >1000 (in which case the error is mostly <10%)
+  //using the fact that it is sampled from a uniform distribution. If the
+  //length of the random list is >1000 the error is mostly <10%
   double x_mean__=0;
   double std_dev=0;
   if(cur_index==0){
