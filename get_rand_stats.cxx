@@ -132,7 +132,7 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
     //In order to quickly access the halves, instead of copying from the 
     // original array I just make pointers to certain parts of the array 
     double *firstHalf = &cur_list[0];
-    double *secondHalf = &cur_list[cur_len/2];
+    double *secondHalf = &cur_list[(cur_len/2)];
     //Use a binary tree in order to keep only looking in parts of the list
     //that contain the final value, so the algorithm will be O(log(n)) and 
     // not O(n)
@@ -142,8 +142,7 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
       //negative. This is because, if the value is negative, then that means the
       //middle value is greater than the input value, so therefore we should 
       //take the list containing smaller values (the left branch'''
-
-      if((X-firstHalf[(cur_len/2)-1])<0){
+      if((X-firstHalf[(cur_len/2)-1])<=0){
 
         if(cur_len==cur_N__){
           cur_index = 0;
@@ -167,7 +166,7 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
     }
     //If the values are not equal, go in the direction that is closer to the 
     //input value X
-    if(std::abs(firstHalf[(cur_len/2)-1]-X)<std::abs(secondHalf[0]-X)){
+    else if(std::abs(firstHalf[(cur_len/2)-1]-X)<=std::abs(secondHalf[0]-X)){
       if(cur_len==cur_N__){
         cur_index = 0;
       }
@@ -187,6 +186,38 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
     if(cur_len==1){
       close_val=cur_list[0];
     }
+  }
+  //If the previous value is the same as the current value, look backwards in 
+  //the list by halves (splitting the list) until it finds the earliest value
+  //that is the same. TODO Make a function to reduce the number of times I use
+  //the binary tree logic for calculating the current length and index
+  if(cur_index>0 && close_val==random_list__[cur_index-1]){
+    double* cur_half = random_list__;
+    int cur_len = cur_index+1; 
+    int new_index = 0; 
+    while(cur_len>1){
+      double *firstHalf = &cur_half[0];
+      double *secondHalf = &cur_half[cur_len/2];
+      if((close_val-firstHalf[(cur_len/2)-1])==0){
+        if(cur_len==cur_index+1){
+          new_index = 0;
+        }
+        cur_half=firstHalf;
+        cur_len = (cur_len/2);
+      }
+      else{
+        if(cur_len==cur_index+1){
+          new_index = cur_len/2;
+        }
+        else{
+          new_index = new_index + (cur_len/2);
+        }
+        cur_half=secondHalf;
+        cur_len = ceil((float)cur_len/2.0);
+
+      }
+    }
+    cur_index=new_index;
   }
   //Implement a method for calculating the mean that stores the results for 
   // every index so they don't have to be calculated again
@@ -336,8 +367,8 @@ void test_rnd_list::test_get_stats_ends(){
   assert(std::get<1>(stats1)==0 && std::get<0>(stats1)==test_rand[0]); 
 }
 void test_rnd_list::test_get_stats(){
-  float in_len = 1000;
-  fizz_rnd_list test_list(in_len);
+  float in_len = 100000;
+  int_rnd_list test_list(in_len);
   int test_val = 500;
   double* test_rand = test_list.get_list();
   std::tuple<double, int, double, double> stats = test_list.get_stats(test_val); 
@@ -353,7 +384,6 @@ void test_rnd_list::test_get_stats(){
       diff=cur_diff;
     }
   }
-  //std::cout<<std::get<1>(stats)<<" "<<cor_ind<<" "<<std::get<0>(stats)<<" "<<cor_val<<std::endl;
   assert(std::get<1>(stats)==cor_ind && std::get<0>(stats)==cor_val); 
   
 }
