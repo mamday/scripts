@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <cassert>
 #include "get_rand_stats.h"
 
 //Initialize int_rnd_list, using the constructor from fizz_rnd_list that takes
@@ -59,6 +60,10 @@ fizz_rnd_list::fizz_rnd_list(int N): cur_N__(N), x_mean__(0), max_mean_ind__(0){
 //Destruct fizz_rnd_list, making sure to abolish the dynamically allocated array
 fizz_rnd_list::~fizz_rnd_list(){
   delete [] random_list__;
+}
+
+double* fizz_rnd_list::get_list(){
+  return random_list__;
 }
 
 double fizz_rnd_list::get_mean(int X_ind){
@@ -203,6 +208,36 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
   return std::make_tuple(close_val,cur_index,x_mean__,std_dev);
 }
 
+//Implement my unit test framework
+test_rnd_list::test_rnd_list(){
+}
+
+test_rnd_list::~test_rnd_list(){
+}
+
+//Test initiation of class
+void test_rnd_list::test_fizz_rnd_list_initiation(){
+  float l_len = 10;
+  fizz_rnd_list test_list(l_len);
+  double* test_rand = test_list.get_list();
+  int test_len = 0;
+  while(test_len<l_len){
+    assert(test_rand[test_len]>0 && test_rand[test_len]<1);
+    test_len+=1;
+  }
+}
+
+void test_rnd_list::test_int_rnd_list_initiation(){
+  int l_len = 10;
+  int_rnd_list test_list(l_len);
+  double* test_rand = test_list.get_list();
+  int test_len = 0;
+  while(test_len<l_len){
+    assert(test_rand[test_len]>0 && test_rand[test_len]<1000);
+    test_len+=1;
+  }
+}
+
 // Get the length of the array and the number of times to iterate from the 
 // command line (num). Then initialize either int_rnd_list (if the second 
 // argument is thousand) or fizz_rnd_list(if the second argument is one).
@@ -214,42 +249,55 @@ std::tuple<double, int, double, double> fizz_rnd_list::get_stats(double X){
 int main(int argc, char* argv[]){
   //Initialize random number generator
   srand(time(NULL));
+  //If one input is given, and the name of the input is 'test', then run the 
+  //tests
+  if(argc == 2){
+    std::string in_string(argv[1]);
+    if(in_string!="test"){
+      std::cerr<<"ERROR: Received the incorrect number of arguments"<<std::endl;
+      exit(EXIT_FAILURE);
+    }
+    test_rnd_list tester;
+    tester.test_fizz_rnd_list_initiation();
+    tester.test_int_rnd_list_initiation();
+  }
   //Exit if the wrong number of inputs are given
-  if(argc != 3){
+  else if(argc != 3){
     std::cerr<<"ERROR: Received the incorrect number of arguments"<<std::endl;
     exit(EXIT_FAILURE);
   } 
-  //Make the input a float so that we get the correct behavior of fizz_rnd_list
-  float num = atof(argv[1]);
-  //Change the input char array into a string that is easier to parse
-  std::string in_string(argv[2]);
-  //Execute the get_stats() function for int_rnd_list if in_string is 'thousand'
-  // and for fizz_rnd_list if the input is 'one'. Otherwise complain.
-  std::tuple<double,int,double,double> fin_tup;
-  double rand_num;
-  if(in_string=="thousand"){
-    int_rnd_list i_rnd(num);
-    for(int i=0; i<(num+1); ++i){
-      rand_num = rand() % 1000;
-      fin_tup = i_rnd.get_stats(rand_num);
-      //The following will print the tuple if you want. Could make this a function
-      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
-    }
-  }
-  else if(in_string=="one"){
-    fizz_rnd_list f_rnd(num);
-    for(int i=0; i<(num+1); ++i){
-      rand_num = (float)rand()/(float)(RAND_MAX);
-      fin_tup = f_rnd.get_stats(rand_num); 
-      //The following will print the tuple if you want. Could make this a function
-      //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
-    }
-  }
   else{
-    //Fail if the input is not 'one' or 'thousand'
-    std::cerr<<"ERROR: Invalid algorithm classifier"<<std::endl;
-    exit(EXIT_FAILURE);
+    //Make the input a float so that we get the correct behavior of fizz_rnd_list
+    float num = atof(argv[1]);
+    //Change the input char array into a string that is easier to parse
+    std::string in_string(argv[2]);
+    //Execute the get_stats() function for int_rnd_list if in_string is 'thousand'
+    // and for fizz_rnd_list if the input is 'one'. Otherwise complain.
+    std::tuple<double,int,double,double> fin_tup;
+    double rand_num;
+    if(in_string=="thousand"){
+      int_rnd_list i_rnd(num);
+      for(int i=0; i<(num+1); ++i){
+        rand_num = rand() % 1000;
+        fin_tup = i_rnd.get_stats(rand_num);
+        //The following will print the tuple if you want. Could make this a function
+        //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      }
+    }
+    else if(in_string=="one"){
+      fizz_rnd_list f_rnd(num);
+      for(int i=0; i<(num+1); ++i){
+        rand_num = (float)rand()/(float)(RAND_MAX);
+        fin_tup = f_rnd.get_stats(rand_num); 
+        //The following will print the tuple if you want. Could make this a function
+        //std::cout<<rand_num<<" "<<std::get<0>(fin_tup)<<" "<<std::get<1>(fin_tup)<<" "<<std::get<2>(fin_tup)<<" "<<std::get<3>(fin_tup)<<std::endl;
+      }
+    }
+    else{
+      //Fail if the input is not 'one' or 'thousand'
+      std::cerr<<"ERROR: Invalid algorithm classifier"<<std::endl;
+      exit(EXIT_FAILURE);
+    }
   }
-
 }
 

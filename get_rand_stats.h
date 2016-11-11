@@ -24,6 +24,8 @@ class fizz_rnd_list{
     double get_mean(int X_ind);
     double get_std_dev(int X_ind);
     double get_uniform_std_dev(int X_ind);
+    //A getter for the random_list__ 
+    double* get_list();
   private:
     //Array to hold the list of random numbers
     double* random_list__;
@@ -52,4 +54,22 @@ class int_rnd_list: public fizz_rnd_list{
     // class, because this class can use it just as easily. I would probably
     // not create this second class at all, if I was being most efficient,
     // to save on having to call the virtual destructor
+};
+
+class test_rnd_list{
+  public:
+    test_rnd_list();
+    virtual ~test_rnd_list();
+
+    void test_fizz_rnd_list_initiation();
+    void test_int_rnd_list_initiation();
+    void test_uniform_std_dev();
+    void test_get_mean_zero();
+    void test_get_std_dev_zero();
+    void test_get_mean_one();
+    void test_get_std_dev_one();
+    void test_get_mean_two();
+    void test_get_mean_repeat();
+    void test_get_mean_threepeat();
+    void test_get_stats();
 };
