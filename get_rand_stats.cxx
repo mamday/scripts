@@ -328,8 +328,10 @@ void test_rnd_list::test_get_stats(){
   float in_len = 3;
   fizz_rnd_list test_list(in_len);
   double* test_rand = test_list.get_list();
+
   std::tuple<double, int, double, double> stats = test_list.get_stats(2); 
   assert(std::get<1>(stats)==2 && std::get<0>(stats)==test_rand[2]); 
+
   std::tuple<double, int, double, double> stats1 = test_list.get_stats(-1); 
   assert(std::get<1>(stats1)==0 && std::get<0>(stats1)==test_rand[0]); 
 }
@@ -365,6 +367,7 @@ int main(int argc, char* argv[]){
     tester.test_get_mean_repeat();
     tester.test_get_mean_threepeat();
     tester.test_get_stats();
+    std::cout<<"Passed!"<<std::endl;
   }
   //Exit if the wrong number of inputs are given
   else if(argc != 3){
