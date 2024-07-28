@@ -14,6 +14,7 @@ global graphrev_nodes
 graph_nodes = {key: deque() for key in [str(i) for i in xrange(0,1000000)]} 
 graphrev_nodes = {key: deque() for key in [str(i) for i in xrange(0,1000000)]}
  
+#Comment
 for line in open(file_name).readlines():
   in_list = line.split(' ')
   sec_list = line.split(' ')
